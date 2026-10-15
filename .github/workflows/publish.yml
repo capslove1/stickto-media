@@ -1,0 +1,49 @@
+name: 예약 게시
+
+on:
+  schedule:
+    - cron: "0 2 * * 1,3,5" # 한국 시간 월·수·금 11:00 (GitHub 사정으로 늦게 실행될 수 있음)
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "dry-run(미리보기) / check(연결 확인) / post(실제 게시)"
+        type: choice
+        options: [dry-run, check, post]
+        default: dry-run
+      now:
+        description: "미리보기용 시각 (예: 2026-10-19T11:05:00+09:00, 비우면 지금)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write # 게시 결과를 queue.json 에 기록하려고 필요
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: 게시
+        env:
+          MODE: ${{ github.event_name == 'schedule' && 'post' || inputs.mode }}
+          NOW: ${{ inputs.now }}
+          INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
+          THREADS_ACCESS_TOKEN: ${{ secrets.THREADS_ACCESS_TOKEN }}
+          IG_TOKEN_EXPIRES: ${{ vars.IG_TOKEN_EXPIRES }}
+          THREADS_TOKEN_EXPIRES: ${{ vars.THREADS_TOKEN_EXPIRES }}
+        run: node scripts/publish.mjs "--$MODE"
+      - name: 결과 저장
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add posts/queue.json
+          git diff --cached --quiet || (git commit -m "게시 결과 기록" && git push)
