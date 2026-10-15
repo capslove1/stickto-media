@@ -56,26 +56,27 @@ async function main() {
     const reasons = {
       failed: "두 채널 모두 올라가지 않았어요.",
       partial: "한쪽 채널만 올라갔어요.",
-      missed: "예약 시각이 24시간 넘게 지나 올리지 않았어요. 날짜를 다시 잡아 주세요.",
+      missed: "예약 시각보다 3시간 넘게 늦어 올리지 않았어요. 날짜를 다시 잡아 주세요.",
     };
     const detail = ["instagram", "threads"]
-      .map((ch) => item.result?.[ch]?.error ? `- ${ch}: ${item.result[ch].error}` : item.result?.[ch]?.permalink ? `- ${ch}: 게시됨 ${item.result[ch].permalink}` : null)
+      .map((ch) => item.result?.[ch]?.missed ? `- ${ch}: 예약 시각보다 3시간 넘게 늦어 올리지 않음` : item.result?.[ch]?.error ? `- ${ch}: ${item.result[ch].error}` : item.result?.[ch]?.permalink ? `- ${ch}: 게시됨 ${item.result[ch].permalink}` : null)
       .filter(Boolean);
     if (item.result?.error) detail.push(`- ${item.result.error}`);
-    await createIssue(`게시 실패 - ${item.date} ${item.site}`,
+    await createIssue(`게시 실패 - ${item.date} ${item.site ?? item.id}`,
       `${reasons[item.status]}\n\n글: ${item.id} (상태: ${item.status})\n${detail.join("\n")}\n\n실행 기록: ${RUN_URL}`);
     item.notified = true;
     changed = true;
   }
 
   // 3) 대기열 부족
-  const left = queue.posts.filter((p) => p.status === "approved");
+  // 대기열 알림은 시공 글(사진·릴스)만 센다. 스레드 일상 글(type: "text")은 빼고 센다.
+  const left = queue.posts.filter((p) => p.status === "approved" && p.type !== "text");
   if (left.length <= LOW_LIMIT) {
-    const list = left.map((p) => `- ${p.date} ${p.time} ${p.site}`).join("\n") || "- (없음)";
+    const list = left.map((p) => `- ${p.date} ${p.site}`).join("\n") || "- (없음)";
     await createIssue(`예약 글 ${left.length}개 남음 - 대기열 채워주세요`,
-      `아직 올라가지 않은 승인된 글이 ${left.length}개 남았어요.\n\n${list}\n\nClaude 에게 "대기열 확인해 줘"라고 말하면 다음 2주 치 글을 만들어 보여 줘요.`);
+      `아직 올라가지 않은 승인된 시공 글(사진·릴스)이 ${left.length}개 남았어요.\n\n${list}\n\nClaude 에게 "대기열 확인해 줘"라고 말하면 다음 2주 치 글을 만들어 보여 줘요.`);
   } else {
-    console.log(`남은 예약 글 ${left.length}개 - 알림 없음`);
+    console.log(`남은 시공 글 ${left.length}개 - 알림 없음`);
   }
 
   if (changed && !DRY) writeFileSync(QUEUE_FILE, JSON.stringify(queue, null, 2) + "\n", "utf8");

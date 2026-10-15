@@ -12,7 +12,9 @@ const MEDIA_BASE = (process.env.MEDIA_BASE_URL || "https://raw.githubusercontent
 const IG_BASE = "https://graph.instagram.com/v26.0";
 const TH_BASE = "https://graph.threads.net/v1.0";
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
-const LATE_LIMIT_MS = 24 * 60 * 60 * 1000; // 예약 시각보다 24시간 넘게 지났으면 올리지 않고 "missed"
+const EARLY_MS = 30 * 60 * 1000; // 예약 실행이 일찍 돌아도 예약 시각 30분 전부터는 올린다
+const LATE_LIMIT_MS = 3 * 60 * 60 * 1000; // 예약 시각보다 3시간 넘게 지났으면 올리지 않고 "missed"
+const CHANNELS = ["instagram", "threads"];
 const POLL_INTERVAL_MS = 5_000;
 const POLL_MAX_TRIES = 60;
 const TOKEN_WARN_DAYS = 7;
@@ -100,7 +102,9 @@ async function postInstagram(images, caption) {
 
 async function postThreads(images, text) {
   let creationId;
-  if (images.length === 1) {
+  if (images.length === 0) {
+    ({ id: creationId } = await th("POST", "me/threads", { media_type: "TEXT", text }));
+  } else if (images.length === 1) {
     ({ id: creationId } = await th("POST", "me/threads", { media_type: "IMAGE", image_url: images[0], text }));
   } else {
     const children = [];
@@ -117,24 +121,25 @@ async function postThreads(images, text) {
   return { id, permalink };
 }
 
-// 예약 시각(한국 시간)을 UTC 밀리초로 바꾼다.
-const scheduledAt = (item) => Date.parse(`${item.date}T${item.time}:00Z`) - KST_OFFSET_MS;
+// 채널별 예약 시각(한국 시간)을 UTC 밀리초로 바꾼다. 채널에 time 이 없으면 글의 time 을 쓴다.
+const scheduledAt = (item, ch) => Date.parse(`${item.date}T${item[ch].time ?? item.time}:00Z`) - KST_OFFSET_MS;
 const kst = (ms) => new Date(ms + KST_OFFSET_MS).toISOString().slice(0, 16).replace("T", " ");
 const urls = (paths) => paths.map((p) => (/^https?:\/\//.test(p) ? p : MEDIA_BASE + p));
 
 // 스레드는 이모지를 UTF-8 바이트 수로 센다.
 const threadsLength = (t) => [...t].reduce((n, ch) => n + (/\p{Extended_Pictographic}/u.test(ch) ? Buffer.byteLength(ch) : 1), 0);
 
-function validate(item) {
+function validate(item, ch) {
   const problems = [];
-  const tags = item.threads.text.match(/#\S+/g) ?? [];
-  if (tags.length > 1) problems.push(`스레드 해시태그가 ${tags.length}개예요(1개만).`);
-  if (threadsLength(item.threads.text) > 500) problems.push("스레드 글이 500자를 넘어요.");
-  if (item.instagram.caption.length > 2200) problems.push("인스타 캡션이 2200자를 넘어요.");
-  for (const ch of ["instagram", "threads"]) {
-    const n = item[ch].images.length;
-    if (n < 1 || n > 10) problems.push(`${ch} 사진은 1~10장이어야 해요(지금 ${n}장).`);
-  }
+  const c = item[ch];
+  if (ch === "threads") {
+    const tags = c.text.match(/#S+/g) ?? [];
+    if (tags.length > 1) problems.push(`스레드 해시태그가 ${tags.length}개예요(1개만).`);
+    if (threadsLength(c.text) > 500) problems.push("스레드 글이 500자를 넘어요.");
+  } else if (c.caption.length > 2200) problems.push("인스타 캡션이 2200자를 넘어요.");
+  const n = (c.images ?? []).length;
+  if (ch === "instagram" && (n < 1 || n > 10)) problems.push(`인스타 사진은 1~10장이어야 해요(지금 ${n}장).`);
+  if (ch === "threads" && n > 10) problems.push(`스레드 사진은 10장 이하여야 해요(지금 ${n}장).`);
   return problems;
 }
 
@@ -172,57 +177,56 @@ async function run(mode) {
 
   for (const item of queue.posts) {
     if (item.status !== "approved") continue;
-    const at = scheduledAt(item);
-    if (now < at) continue;
-    if (now - at > LATE_LIMIT_MS) {
-      console.log(`[${item.id}] 예약 시각(${item.date} ${item.time})이 24시간 넘게 지나 올리지 않았어요. 날짜를 다시 잡아 주세요.`);
-      if (mode === "post") { item.status = "missed"; changed = true; }
-      continue;
-    }
-    const problems = validate(item);
-    if (problems.length) {
-      console.log(`[${item.id}] 올리지 않음: ${problems.join(" ")}`);
-      if (mode === "post") { item.status = "failed"; item.result = { error: problems.join(" ") }; changed = true; }
-      continue;
-    }
-
-    const igImages = urls(item.instagram.images);
-    const thImages = urls(item.threads.images);
-    console.log(`\n[${item.id}] ${item.site} · 예약 ${item.date} ${item.time}`);
-    igImages.forEach((u, i) => console.log(`  인스타 사진 ${i + 1}: ${u}`));
-    thImages.forEach((u, i) => console.log(`  스레드 사진 ${i + 1}: ${u}`));
-    if (mode !== "post") {
-      try {
-        await checkImages([...new Set([...igImages, ...thImages])]);
-        console.log("  사진 주소: 모두 열림");
-      } catch (e) {
-        console.log(`  사진 주소 문제: ${e.message} ${e.detail ?? ""}`);
-      }
-      continue;
-    }
-
     item.result ??= {};
-    try {
-      await checkImages([...new Set([...igImages, ...thImages])]);
-    } catch (e) {
-      console.log(`  에러: ${e.message}\n  상세: ${e.detail ?? ""}`);
-      item.status = "failed"; item.result.error = `${e.message} ${e.detail ?? ""}`.trim(); changed = true;
-      continue;
-    }
-    for (const [ch, fn, imgs, text] of [["instagram", postInstagram, igImages, item.instagram.caption], ["threads", postThreads, thImages, item.threads.text]]) {
-      if (item.result[ch]?.id) continue; // 이미 올라간 채널은 건너뛴다
+    for (const ch of CHANNELS) {
+      if (!item[ch] || item.result[ch]?.id || item.result[ch]?.missed || item.result[ch]?.error) continue;
+      const at = scheduledAt(item, ch);
+      const label = `[${item.id}] ${ch === "instagram" ? "인스타" : "스레드"} ${item.date} ${item[ch].time ?? item.time}`;
+      if (now < at - EARLY_MS) continue;
+      if (now - at > LATE_LIMIT_MS) {
+        console.log(`${label}: 예약 시각보다 3시간 넘게 지나 올리지 않았어요.`);
+        if (mode === "post") { item.result[ch] = { missed: true, at: new Date().toISOString() }; changed = true; }
+        continue;
+      }
+      const problems = validate(item, ch);
+      if (problems.length) {
+        console.log(`${label}: 올리지 않음 - ${problems.join(" ")}`);
+        if (mode === "post") { item.result[ch] = { error: problems.join(" "), at: new Date().toISOString() }; changed = true; }
+        continue;
+      }
+      const imgs = urls(item[ch].images ?? []);
+      const text = ch === "instagram" ? item[ch].caption : item[ch].text;
+      console.log(`\n${label} · ${item.type ?? "photo"}${item.site ? " · " + item.site : ""}`);
+      imgs.forEach((u, i) => console.log(`  사진 ${i + 1}: ${u}`));
+      if (!imgs.length) console.log(`  글: ${text.split("\n")[0]} …`);
+      if (mode !== "post") {
+        if (imgs.length) {
+          try { await checkImages(imgs); console.log("  사진 주소: 모두 열림"); }
+          catch (e) { console.log(`  사진 주소 문제: ${e.message} ${e.detail ?? ""}`); }
+        }
+        continue;
+      }
       try {
-        const r = await fn(imgs, text);
+        if (imgs.length) await checkImages(imgs);
+        const r = await (ch === "instagram" ? postInstagram : postThreads)(imgs, text);
         item.result[ch] = { ...r, at: new Date().toISOString() };
-        console.log(`  ${ch} 게시 완료: ${r.permalink ?? r.id}`);
+        console.log(`  게시 완료: ${r.permalink ?? r.id}`);
       } catch (e) {
         item.result[ch] = { error: `${e.message} ${e.detail ?? ""}`.trim(), at: new Date().toISOString() };
-        console.log(`  ${ch} 에러: ${e.message}\n  상세: ${e.detail ?? ""}`);
+        console.log(`  에러: ${e.message}
+  상세: ${e.detail ?? ""}`);
       }
       changed = true;
     }
-    const ok = ["instagram", "threads"].filter((c) => item.result[c]?.id).length;
-    item.status = ok === 2 ? "posted" : ok === 1 ? "partial" : "failed";
+    // 채널이 모두 끝났으면 글 상태를 정한다.
+    const chs = CHANNELS.filter((c) => item[c]);
+    if (chs.every((c) => item.result[c]?.id || item.result[c]?.missed || item.result[c]?.error)) {
+      const ok = chs.filter((c) => item.result[c]?.id).length;
+      const missed = chs.filter((c) => item.result[c]?.missed).length;
+      const before = item.status;
+      item.status = ok === chs.length ? "posted" : missed === chs.length ? "missed" : ok > 0 ? "partial" : "failed";
+      if (before !== item.status) changed = true;
+    }
   }
 
   if (changed) writeFileSync(QUEUE_FILE, JSON.stringify(queue, null, 2) + "\n", "utf8");
