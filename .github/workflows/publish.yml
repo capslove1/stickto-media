@@ -2,11 +2,12 @@ name: 예약 게시
 
 on:
   schedule:
-    # 한국 시간 월~토, 올릴 시각보다 20분 일찍 실행 (GitHub 사정으로 늦게 실행될 수 있음)
-    - cron: "10 23 * * 0-5" # 08:10 → 스레드 일상 08:30 (UTC 전날 23:10)
-    - cron: "40 2 * * 1-6" # 11:40 → 스레드 시공 글 12:00
-    - cron: "40 10 * * 1-6" # 19:40 → 인스타 사진·릴스 20:00
-    - cron: "40 11 * * 1-6" # 20:40 → 스레드 일상 21:00
+    # 한국 시간 월~토. 예약 시각은 기준 시각 앞뒤 15분 안에서 흩어져 있고,
+    # 스크립트가 예약 시각까지 기다렸다가 올린다 (GitHub 사정으로 늦게 실행될 수 있음)
+    - cron: "55 22 * * 0-5" # 07:55 → 스레드 일상 08:15~08:45 (UTC 전날 22:55)
+    - cron: "25 2 * * 1-6" # 11:25 → 스레드 시공 글 11:45~12:15
+    - cron: "25 10 * * 1-6" # 19:25 → 인스타 사진·릴스 19:45~20:15
+    - cron: "25 11 * * 1-6" # 20:25 → 스레드 일상 20:45~21:15
   workflow_dispatch:
     inputs:
       mode:
@@ -23,6 +24,7 @@ permissions:
   contents: write # 게시 결과를 queue.json 에 기록하려고 필요
   issues: write # 대기열 부족·게시 실패 알림 이슈를 만들려고 필요
 
+# 실행이 동시에 두 개 돌지 않게 한다. 앞 실행이 기다리는 중이면 다음 실행은 끝날 때까지 대기.
 concurrency:
   group: publish
   cancel-in-progress: false
@@ -30,6 +32,7 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
@@ -60,4 +63,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add posts/queue.json
-          git diff --cached --quiet || (git commit -m "게시 결과 기록" && git push)
+          # 기다리는 사이 main 이 바뀌었을 수 있어서 최신 내용 위에 얹어서 올린다
+          git diff --cached --quiet || (git commit -m "게시 결과 기록" && git pull --rebase origin main && git push)
