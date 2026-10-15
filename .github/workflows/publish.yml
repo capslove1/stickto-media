@@ -2,7 +2,7 @@ name: 예약 게시
 
 on:
   schedule:
-    - cron: "0 2 * * 1,3,5" # 한국 시간 월·수·금 11:00 (GitHub 사정으로 늦게 실행될 수 있음)
+    - cron: "0 2 * * 1-6" # 한국 시간 월~토 11:00 (GitHub 사정으로 늦게 실행될 수 있음)
   workflow_dispatch:
     inputs:
       mode:
