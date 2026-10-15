@@ -6,7 +6,7 @@
       "date": "2026-10-15",
       "time": "11:00",
       "site": "H131",
-      "status": "approved",
+      "status": "posted",
       "instagram": {
         "images": [
           "media/2026-10-19-H131/01.jpg",
@@ -25,7 +25,18 @@
         ],
         "text": "대구 시지 아파트 거실 아치형 문틀.\n짙은 우드였던 걸 흰색으로 바꿨어.\n옆으로 넘겨 보면 전이랑 후 차이 바로 보여 👉\n대구·경북 어디든 궁금한 거 있으면 편하게 물어봐.\n010-7111-1126\n#대구인테리어필름"
       },
-      "result": {}
+      "result": {
+        "instagram": {
+          "id": "18125804485912393",
+          "permalink": "https://www.instagram.com/p/DegQLc5EY8i/",
+          "at": "2026-10-15T05:53:47.073Z"
+        },
+        "threads": {
+          "id": "18167041933482716",
+          "permalink": "https://www.threads.com/@stickto_film/post/DegQPxCkRGI",
+          "at": "2026-10-15T05:54:23.183Z"
+        }
+      }
     },
     {
       "id": "2026-10-21-H150",
