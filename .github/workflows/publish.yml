@@ -17,6 +17,7 @@ on:
 
 permissions:
   contents: write # 게시 결과를 queue.json 에 기록하려고 필요
+  issues: write # 대기열 부족·게시 실패 알림 이슈를 만들려고 필요
 
 concurrency:
   group: publish
@@ -31,6 +32,7 @@ jobs:
         with:
           node-version: 24
       - name: 게시
+        id: publish
         env:
           MODE: ${{ github.event_name == 'schedule' && 'post' || inputs.mode }}
           NOW: ${{ inputs.now }}
@@ -40,6 +42,14 @@ jobs:
           IG_TOKEN_EXPIRES: ${{ vars.IG_TOKEN_EXPIRES }}
           THREADS_TOKEN_EXPIRES: ${{ vars.THREADS_TOKEN_EXPIRES }}
         run: node scripts/publish.mjs "--$MODE"
+      - name: 알림 이슈
+        if: always() && (github.event_name == 'schedule' || inputs.mode == 'post')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          PUBLISH_OUTCOME: ${{ steps.publish.outcome }}
+        run: node scripts/notify.mjs
       - name: 결과 저장
         if: always()
         run: |
