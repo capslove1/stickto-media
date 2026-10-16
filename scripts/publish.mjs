@@ -124,7 +124,9 @@ async function postThreads(images, text) {
 }
 
 // 채널별 예약 시각(한국 시간)을 UTC 밀리초로 바꾼다. 채널에 time 이 없으면 글의 time 을 쓴다.
-const scheduledAt = (item, ch) => Date.parse(`${item.date}T${item[ch].time ?? item.time}:00Z`) - KST_OFFSET_MS;
+// 채널마다 날짜를 따로 둘 수 있다: item[ch].date 가 있으면 그 날짜, 없으면 item.date
+const chDate = (item, ch) => item[ch]?.date ?? item.date;
+const scheduledAt = (item, ch) => Date.parse(`${chDate(item, ch)}T${item[ch].time ?? item.time}:00Z`) - KST_OFFSET_MS;
 const kst = (ms) => new Date(ms + KST_OFFSET_MS).toISOString().slice(0, 16).replace("T", " ");
 const urls = (paths) => paths.map((p) => (/^https?:\/\//.test(p) ? p : MEDIA_BASE + p));
 
@@ -225,7 +227,7 @@ async function run(mode) {
   tasks.sort((a, b) => a.at - b.at);
 
   for (const { item, ch, at } of tasks) {
-    const label = `[${item.id}] ${ch === "instagram" ? "인스타" : "스레드"} ${item.date} ${item[ch].time ?? item.time}`;
+    const label = `[${item.id}] ${ch === "instagram" ? "인스타" : "스레드"} ${chDate(item, ch)} ${item[ch].time ?? item.time}`;
     if ((mode === "post" ? Date.now() : now) - at > LATE_LIMIT_MS) {
       console.log(`${label}: 예약 시각보다 6시간 넘게 지나 올리지 않았어요.`);
       if (mode === "post") { item.result[ch] = { missed: true, at: new Date().toISOString() }; changed = true; }

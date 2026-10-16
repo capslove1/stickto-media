@@ -14,13 +14,14 @@ const CHANNELS = ["instagram", "threads"];
 
 const toMin = (t) => Number(t.slice(0, 2)) * 60 + Number(t.slice(3, 5));
 const toTime = (m) => `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`;
+const chDate = (item, ch) => item[ch]?.date ?? item.date; // 채널별 날짜가 있으면 그 날짜
 const shiftDate = (d, days) => new Date(Date.parse(`${d}T00:00:00Z`) + days * 86_400_000).toISOString().slice(0, 10);
 
 export function spreadTimes(queue) {
   // 날짜별로 이미 쓰인 시각
   const used = new Map();
   const use = (date, time) => (used.get(date) ?? used.set(date, new Set()).get(date)).add(time);
-  for (const item of queue.posts) for (const ch of CHANNELS) if (item[ch]) use(item.date, item[ch].time ?? item.time);
+  for (const item of queue.posts) for (const ch of CHANNELS) if (item[ch]) use(chDate(item, ch), item[ch].time ?? item.time);
 
   const changes = [];
   for (const item of queue.posts) {
@@ -28,7 +29,7 @@ export function spreadTimes(queue) {
     for (const ch of CHANNELS) {
       const from = item[ch]?.time;
       if (!BASE_TIMES.includes(from)) continue;
-      const busy = (t) => [-1, 0, 1].some((d) => used.get(shiftDate(item.date, d))?.has(t));
+      const busy = (t) => [-1, 0, 1].some((d) => used.get(shiftDate(chDate(item, ch), d))?.has(t));
       let to;
       for (let i = 0; i < 100 && !to; i++) {
         const offset = randomInt(-SPREAD_MIN, SPREAD_MIN + 1);
@@ -37,8 +38,8 @@ export function spreadTimes(queue) {
       }
       if (!to) continue; // 빈 시각이 없으면 그대로 둔다
       item[ch].time = to;
-      use(item.date, to);
-      changes.push({ id: item.id, ch, date: item.date, from, to });
+      use(chDate(item, ch), to);
+      changes.push({ id: item.id, ch, date: chDate(item, ch), from, to });
     }
   }
   return changes;
