@@ -15,7 +15,7 @@ const IG_BASE = "https://graph.instagram.com/v26.0";
 const TH_BASE = "https://graph.threads.net/v1.0";
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
 const WAIT_MS = 60 * 60 * 1000; // 예약 시각 60분 전부터 실행되면 그 시각까지 기다렸다가 올린다
-const LATE_LIMIT_MS = 3 * 60 * 60 * 1000; // 예약 시각보다 3시간 넘게 지났으면 올리지 않고 "missed"
+const LATE_LIMIT_MS = 6 * 60 * 60 * 1000; // 예약 시각보다 6시간 넘게 지났으면 올리지 않고 "missed"
 const CHANNELS = ["instagram", "threads"];
 const POLL_INTERVAL_MS = 5_000;
 const POLL_MAX_TRIES = 60;
@@ -227,7 +227,7 @@ async function run(mode) {
   for (const { item, ch, at } of tasks) {
     const label = `[${item.id}] ${ch === "instagram" ? "인스타" : "스레드"} ${item.date} ${item[ch].time ?? item.time}`;
     if ((mode === "post" ? Date.now() : now) - at > LATE_LIMIT_MS) {
-      console.log(`${label}: 예약 시각보다 3시간 넘게 지나 올리지 않았어요.`);
+      console.log(`${label}: 예약 시각보다 6시간 넘게 지나 올리지 않았어요.`);
       if (mode === "post") { item.result[ch] = { missed: true, at: new Date().toISOString() }; changed = true; }
       continue;
     }

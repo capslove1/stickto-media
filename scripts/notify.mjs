@@ -56,10 +56,10 @@ async function main() {
     const reasons = {
       failed: "두 채널 모두 올라가지 않았어요.",
       partial: "한쪽 채널만 올라갔어요.",
-      missed: "예약 시각보다 3시간 넘게 늦어 올리지 않았어요. 날짜를 다시 잡아 주세요.",
+      missed: "예약 시각보다 6시간 넘게 늦어 올리지 않았어요. 날짜를 다시 잡아 주세요.",
     };
     const detail = ["instagram", "threads"]
-      .map((ch) => item.result?.[ch]?.missed ? `- ${ch}: 예약 시각보다 3시간 넘게 늦어 올리지 않음` : item.result?.[ch]?.error ? `- ${ch}: ${item.result[ch].error}` : item.result?.[ch]?.permalink ? `- ${ch}: 게시됨 ${item.result[ch].permalink}` : null)
+      .map((ch) => item.result?.[ch]?.missed ? `- ${ch}: 예약 시각보다 6시간 넘게 늦어 올리지 않음` : item.result?.[ch]?.error ? `- ${ch}: ${item.result[ch].error}` : item.result?.[ch]?.permalink ? `- ${ch}: 게시됨 ${item.result[ch].permalink}` : null)
       .filter(Boolean);
     if (item.result?.error) detail.push(`- ${item.result.error}`);
     await createIssue(`게시 실패 - ${item.date} ${item.site ?? item.id}`,
