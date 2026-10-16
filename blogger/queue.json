@@ -1,0 +1,26 @@
+{
+  "note": "구글 블로그 예약. 네이버 RSS 새 글은 status new 로 들어오고, PC 에서 구글용 글(posts/<id>.html)·title·labels 를 채워 미리보기 뒤 approved 로 바꾼다. 상태: new → draft → approved → posted / failed / missed / skip(올리지 않음)",
+  "since": "2026-10-16T21:00:00+09:00",
+  "posts": [
+    {
+      "id": "224443519203",
+      "site": "H181",
+      "naverUrl": "https://blog.naver.com/stickto_film/224443519203",
+      "naverTitle": "대구 용산동 아파트 인테리어필름, 우드 방문·문틀·중문 흰색 필름 시공",
+      "naverDate": "2026-10-16 11:12",
+      "date": "2026-10-20",
+      "time": "11:30",
+      "title": "대구 용산동 아파트 인테리어필름｜우드색 방문·문틀·중문을 화이트로 바꾼 현장",
+      "file": "blogger/posts/224443519203.html",
+      "labels": [
+        "대구인테리어필름",
+        "용산동",
+        "방문필름",
+        "문틀필름",
+        "중문필름"
+      ],
+      "status": "draft",
+      "result": {}
+    }
+  ]
+}

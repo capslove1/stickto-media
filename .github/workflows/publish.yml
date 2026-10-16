@@ -20,7 +20,7 @@ on:
         default: ""
 
 permissions:
-  contents: write # 게시 결과를 queue.json 에 기록하려고 필요
+  contents: write # 게시 결과를 posts/queue.json, blogger/queue.json 에 기록하려고 필요
   issues: write # 대기열 부족·게시 실패 알림 이슈를 만들려고 필요
 
 # 실행이 동시에 두 개 돌지 않게 한다. 앞 실행이 기다리는 중이면 다음 실행은 끝날 때까지 대기.
@@ -37,6 +37,20 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
+      - name: 구글 블로그 (네이버 새 글 확인 + 승인된 글을 예약 시각에 게시)
+        id: blogger
+        continue-on-error: true
+        env:
+          MODE: ${{ github.event_name == 'schedule' && 'post' || inputs.mode }}
+          NOW: ${{ inputs.now }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+          KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+          KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
+          GH_SECRETS_PAT: ${{ secrets.GH_SECRETS_PAT }}
+        run: node scripts/blogger.mjs "--$MODE"
       - name: 게시
         id: publish
         env:
@@ -70,11 +84,23 @@ jobs:
           KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
           GH_SECRETS_PAT: ${{ secrets.GH_SECRETS_PAT }}
         run: node scripts/kakao-notify.mjs
+      - name: 카카오 알림 (구글 블로그)
+        if: always() && (github.event_name == 'schedule' || inputs.mode == 'post')
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          PUBLISH_OUTCOME: ${{ steps.blogger.outcome }}
+          NOTIFY_LABEL: 구글 블로그
+          KAKAO_SUCCESS_UNTIL: ${{ vars.KAKAO_SUCCESS_UNTIL }}
+          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+          KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+          KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
+          GH_SECRETS_PAT: ${{ secrets.GH_SECRETS_PAT }}
+        run: node scripts/kakao-notify.mjs .kakao-events-blogger.json
       - name: 결과 저장
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add posts/queue.json
+          git add posts/queue.json blogger/queue.json
           # 기다리는 사이 main 이 바뀌었을 수 있어서 최신 내용 위에 얹어서 올린다
           git diff --cached --quiet || (git commit -m "게시 결과 기록" && git pull --rebase origin main && git push)
