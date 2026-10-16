@@ -81,7 +81,7 @@ export function successOn() {
 
 // 게시 결과(events)를 한 메시지로 묶는다. events: [{ kind: ok|fail|missed, ch, date, site, reason, permalink }]
 export function formatEvents(events) {
-  const CH = { instagram: "인스타", threads: "스레드", reels: "릴스" };
+  const CH = { instagram: "인스타", facebook: "페이스북", threads: "스레드", reels: "릴스" };
   const lines = events.map((e) => {
     const head = e.kind === "ok" ? "[완료]" : e.kind === "missed" ? "[missed]" : "[실패]";
     const tail = e.kind === "ok" ? "" : ` · ${(e.reason ?? "").slice(0, 60)}`;

@@ -1,6 +1,8 @@
 # stickto-media
 
-착붙인테리어필름 인스타그램·스레드 예약 게시용 저장소예요.
+착붙인테리어필름 인스타그램·페이스북·스레드 예약 게시용 저장소예요.
+
+- 페이스북 페이지: 인스타 사진 게시물을 같은 날짜·시각·사진·캡션으로 함께 올려요(`"facebook": false` 인 글은 빼요). 결과는 `result.facebook` 에 기록돼요. 인스타만 성공하고 페이스북이 실패하면 카톡으로 알리고, 인스타는 다시 올리지 않아요. 릴스는 페이스북에 올리지 않아요.
 
 - `posts/queue.json`: 예약 목록. `status`가 `approved`인 글만 예약 시각에 올라가요.
   - 인스타와 스레드 날짜를 따로 둘 수 있어요: `instagram.date` 나 `threads.date` 가 있으면 그 날짜, 없으면 `date`. (릴스와 번갈아 올리려고 인스타 사진 날짜만 따로 잡을 때 써요. 릴스는 비공개 저장소 stickto-reels 에서 올려요)
@@ -13,8 +15,8 @@
 - 카카오톡 알림(나에게 보내기): 게시 실행 뒤 `scripts/kakao-notify.mjs` 가 실패·missed 를 보내고, `KAKAO_SUCCESS_UNTIL` 날짜까지는 성공도 보내요. `.github/workflows/token-check.yml` 이 매일 09:10 카카오 토큰을 갱신하고(실패하면 GitHub 메일), 만료 임박 토큰(인스타·스레드 7일 전, GH_SECRETS_PAT 14일 전)을 카톡으로 알려요. 카카오가 새 refresh token 을 주면 두 저장소 비밀값을 자동으로 바꿔요.
 
 ## 필요한 설정 (Settings → Secrets and variables → Actions)
-- Secrets: `INSTAGRAM_ACCESS_TOKEN`, `INSTAGRAM_USER_ID`, `THREADS_ACCESS_TOKEN`, `KAKAO_REST_API_KEY`, `KAKAO_CLIENT_SECRET`, `KAKAO_REFRESH_TOKEN`, `GH_SECRETS_PAT`(두 저장소 Secrets 쓰기 전용)
-- Variables: `IG_TOKEN_EXPIRES`, `THREADS_TOKEN_EXPIRES`, `GH_SECRETS_PAT_EXPIRES` (예: `2026-12-10`), `KAKAO_SUCCESS_UNTIL`(성공 알림 마지막 날). 만료 7일 전부터 실행 결과에 경고가 떠요.
+- Secrets: `INSTAGRAM_ACCESS_TOKEN`, `INSTAGRAM_USER_ID`, `THREADS_ACCESS_TOKEN`, `KAKAO_REST_API_KEY`, `KAKAO_CLIENT_SECRET`, `KAKAO_REFRESH_TOKEN`, `GH_SECRETS_PAT`(두 저장소 Secrets 쓰기 전용), `FB_PAGE_TOKEN`(만료 없는 페이지 토큰), `FB_PAGE_ID`
+- Variables: `IG_TOKEN_EXPIRES`, `THREADS_TOKEN_EXPIRES`, `GH_SECRETS_PAT_EXPIRES`, `FB_DATA_ACCESS_EXPIRES`(페이스북 데이터 접근 만료, 14일 전 카톡) (예: `2026-12-10`), `KAKAO_SUCCESS_UNTIL`(성공 알림 마지막 날). 만료 7일 전부터 실행 결과에 경고가 떠요.
 
 ## 상태 값
 `draft` 초안 → `approved` 승인 → `posted` 게시 완료 / `partial` 한쪽만 성공 / `failed` 실패 / `missed` 예약 시각보다 6시간 넘게 늦어 올리지 않음

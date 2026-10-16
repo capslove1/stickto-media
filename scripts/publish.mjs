@@ -18,10 +18,13 @@ const QUEUE_FILE = new URL("../posts/queue.json", import.meta.url);
 const MEDIA_BASE = (process.env.MEDIA_BASE_URL || "https://raw.githubusercontent.com/capslove1/stickto-media/main/").replace(/\/?$/, "/");
 const IG_BASE = "https://graph.instagram.com/v26.0";
 const TH_BASE = "https://graph.threads.net/v1.0";
+const FB_BASE = "https://graph.facebook.com/v21.0";
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
 const WAIT_MS = 60 * 60 * 1000; // 예약 시각 60분 전부터 실행되면 그 시각까지 기다렸다가 올린다
 const LATE_LIMIT_MS = 6 * 60 * 60 * 1000; // 예약 시각보다 6시간 넘게 지났으면 올리지 않고 "missed"
-const CHANNELS = ["instagram", "threads"];
+// facebook 은 인스타 사진 게시물을 그대로 따라간다(같은 날짜·시각·사진·캡션). 릴스는 비공개 저장소라 여기 없음.
+const CHANNELS = ["instagram", "facebook", "threads"];
+const CH_NAME = { instagram: "인스타", facebook: "페이스북", threads: "스레드" };
 const POLL_INTERVAL_MS = 5_000;
 const POLL_MAX_TRIES = 60;
 const TOKEN_WARN_DAYS = 7;
@@ -29,6 +32,8 @@ const TOKEN_WARN_DAYS = 7;
 const IG_TOKEN = process.env.INSTAGRAM_ACCESS_TOKEN;
 const IG_USER_ID = process.env.INSTAGRAM_USER_ID;
 const TH_TOKEN = process.env.THREADS_ACCESS_TOKEN;
+const FB_TOKEN = process.env.FB_PAGE_TOKEN;
+const FB_PAGE_ID = process.env.FB_PAGE_ID;
 
 class PostError extends Error {
   constructor(message, detail) {
@@ -74,6 +79,7 @@ function client(base, token, channel) {
 
 const ig = client(IG_BASE, IG_TOKEN, "인스타그램");
 const th = client(TH_BASE, TH_TOKEN, "스레드");
+const fb = client(FB_BASE, FB_TOKEN, "페이스북");
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function waitFinished(api, id, field, label) {
@@ -128,6 +134,24 @@ async function postThreads(images, text) {
   return { id, permalink };
 }
 
+// 페이스북 페이지: 사진 1장은 바로 올리고, 여러 장은 사진을 비공개로 먼저 올린 뒤 한 게시물로 묶는다.
+async function postFacebook(images, message) {
+  let postId;
+  if (images.length === 1) {
+    const r = await fb("POST", `${FB_PAGE_ID}/photos`, { url: images[0], caption: message });
+    postId = r.post_id ?? r.id;
+  } else {
+    const params = { message };
+    for (const [i, url] of images.entries()) {
+      const { id } = await fb("POST", `${FB_PAGE_ID}/photos`, { url, published: "false" });
+      params[`attached_media[${i}]`] = JSON.stringify({ media_fbid: id });
+    }
+    ({ id: postId } = await fb("POST", `${FB_PAGE_ID}/feed`, params));
+  }
+  const { permalink_url } = await fb("GET", postId, { fields: "permalink_url" });
+  return { id: postId, permalink: permalink_url };
+}
+
 // 채널별 예약 시각(한국 시간)을 UTC 밀리초로 바꾼다. 채널에 time 이 없으면 글의 time 을 쓴다.
 // 채널마다 날짜를 따로 둘 수 있다: item[ch].date 가 있으면 그 날짜, 없으면 item.date
 const chDate = (item, ch) => item[ch]?.date ?? item.date;
@@ -145,10 +169,11 @@ function validate(item, ch) {
     const tags = c.text.match(/#\S+/g) ?? [];
     if (tags.length > 1) problems.push(`스레드 해시태그가 ${tags.length}개예요(1개만).`);
     if (threadsLength(c.text) > 500) problems.push("스레드 글이 500자를 넘어요.");
-  } else if (c.caption.length > 2200) problems.push("인스타 캡션이 2200자를 넘어요.");
+  } else if (ch === "instagram" && c.caption.length > 2200) problems.push("인스타 캡션이 2200자를 넘어요.");
   const n = (c.images ?? []).length;
   if (ch === "instagram" && (n < 1 || n > 10)) problems.push(`인스타 사진은 1~10장이어야 해요(지금 ${n}장).`);
   if (ch === "threads" && n > 10) problems.push(`스레드 사진은 10장 이하여야 해요(지금 ${n}장).`);
+  if (ch === "facebook" && n < 1) problems.push("페이스북에 올릴 사진이 없어요.");
   return problems;
 }
 
@@ -176,10 +201,19 @@ async function check() {
   await recentPosts("instagram");
   await recentPosts("threads");
   console.log("최근 게시물 읽기(중복 확인용): 두 계정 모두 됨");
+  if (FB_TOKEN && FB_PAGE_ID) {
+    const p = await fb("GET", FB_PAGE_ID, { fields: "name" });
+    await recentPosts("facebook");
+    console.log(`페이스북 페이지 연결: ${p.name} (최근 게시물 읽기 됨)`);
+  } else console.log("::warning::페이스북 비밀값(FB_PAGE_TOKEN, FB_PAGE_ID)이 없어요.");
 }
 
 // 최근 게시물 10개 (중복 게시 확인용)
 async function recentPosts(ch) {
+  if (ch === "facebook") {
+    const { data } = await fb("GET", `${FB_PAGE_ID}/posts`, { fields: "id,message,permalink_url", limit: "10" });
+    return (data ?? []).map((p) => ({ id: p.id, permalink: p.permalink_url, text: p.message }));
+  }
   const { data } = ch === "instagram"
     ? await ig("GET", `${IG_USER_ID}/media`, { fields: "id,caption,permalink", limit: "10" })
     : await th("GET", "me/threads", { fields: "id,text,permalink", limit: "10" });
@@ -210,6 +244,14 @@ async function run(mode) {
   const save = () => writeFileSync(QUEUE_FILE, JSON.stringify(queue, null, 2) + "\n", "utf8");
   let changed = false;
   console.log(`지금(한국 시간): ${kst(now)} · 모드: ${mode}`);
+  // 인스타 사진 게시물에 페이스북을 붙인다. queue.json 에는 쓰지 않으려고 숨은 속성으로 둔다.
+  // 이미 끝난 글(posted 등)과 "facebook": false 인 글은 빼고, 실제 게시 때 페이스북 비밀값이 없으면 붙이지 않는다.
+  const fbOn = mode !== "post" || Boolean(FB_TOKEN && FB_PAGE_ID);
+  if (!fbOn) console.log("::warning::페이스북 비밀값이 없어서 페이스북은 건너뛰어요.");
+  for (const item of queue.posts) {
+    if (fbOn && item.status === "approved" && item.instagram && item.facebook !== false && (item.type ?? "photo") !== "reel")
+      Object.defineProperty(item, "facebook", { value: item.instagram, enumerable: false, configurable: true });
+  }
   warnTokens(now);
 
   // 기준 시각 그대로인 새 글은 먼저 앞뒤 15분 안으로 흩는다.
@@ -232,7 +274,7 @@ async function run(mode) {
   tasks.sort((a, b) => a.at - b.at);
 
   for (const { item, ch, at } of tasks) {
-    const label = `[${item.id}] ${ch === "instagram" ? "인스타" : "스레드"} ${chDate(item, ch)} ${item[ch].time ?? item.time}`;
+    const label = `[${item.id}] ${CH_NAME[ch]} ${chDate(item, ch)} ${item[ch].time ?? item.time}`;
     if ((mode === "post" ? Date.now() : now) - at > LATE_LIMIT_MS) {
       console.log(`${label}: 예약 시각보다 6시간 넘게 지나 올리지 않았어요.`);
       if (mode === "post") { item.result[ch] = { missed: true, at: new Date().toISOString() }; changed = true; addEvent({ kind: "missed", ch, date: chDate(item, ch), site: item.site ?? item.id, reason: "예약 시각보다 6시간 넘게 늦음" }); }
@@ -245,7 +287,7 @@ async function run(mode) {
       continue;
     }
     const imgs = urls(item[ch].images ?? []);
-    const text = ch === "instagram" ? item[ch].caption : item[ch].text;
+    const text = ch === "threads" ? item[ch].text : item[ch].caption;
     console.log(`\n${label} · ${item.type ?? "photo"}${item.site ? " · " + item.site : ""}`);
     imgs.forEach((u, i) => console.log(`  사진 ${i + 1}: ${u}`));
     if (!imgs.length) console.log(`  글: ${text.split("\n")[0]} …`);
@@ -275,7 +317,7 @@ async function run(mode) {
     } else {
       try {
         if (imgs.length) await checkImages(imgs);
-        const r = await (ch === "instagram" ? postInstagram : postThreads)(imgs, text);
+        const r = await ({ instagram: postInstagram, facebook: postFacebook, threads: postThreads })[ch](imgs, text);
         item.result[ch] = { ...r, at: new Date().toISOString() };
         console.log(`  게시 완료: ${r.permalink ?? r.id}`);
         addEvent({ kind: "ok", ch, date: chDate(item, ch), site: item.site ?? item.id, permalink: r.permalink });

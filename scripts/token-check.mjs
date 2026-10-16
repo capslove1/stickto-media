@@ -13,6 +13,7 @@ const daysLeft = (d) => Math.round((Date.parse(`${d}T00:00:00Z`) - Date.parse(`$
 const CHECKS = [
   ["인스타 토큰", process.env.IG_TOKEN_EXPIRES, 7, "새 토큰을 받아 stickto-media·stickto-reels 비밀값을 바꿔 주세요"],
   ["스레드 토큰", process.env.THREADS_TOKEN_EXPIRES, 7, "새 토큰을 받아 stickto-media 비밀값을 바꿔 주세요"],
+  ["페이스북 데이터 접근", process.env.FB_DATA_ACCESS_EXPIRES, 14, "Graph API Explorer 에서 다시 로그인해 페이지 토큰을 새로 받아 주세요"],
   ["GitHub 토큰(GH_SECRETS_PAT)", process.env.GH_SECRETS_PAT_EXPIRES, 14, "새로 만들어 두 저장소 비밀값을 바꿔 주세요. 없으면 카카오 토큰 자동 갱신이 멈춰요"],
 ];
 const warn = [];

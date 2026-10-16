@@ -45,6 +45,8 @@ jobs:
           INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
           INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
           THREADS_ACCESS_TOKEN: ${{ secrets.THREADS_ACCESS_TOKEN }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
           IG_TOKEN_EXPIRES: ${{ vars.IG_TOKEN_EXPIRES }}
           THREADS_TOKEN_EXPIRES: ${{ vars.THREADS_TOKEN_EXPIRES }}
         run: node scripts/publish.mjs "--$MODE"
