@@ -56,6 +56,18 @@ jobs:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           PUBLISH_OUTCOME: ${{ steps.publish.outcome }}
         run: node scripts/notify.mjs
+      - name: 카카오 알림
+        if: always() && (github.event_name == 'schedule' || inputs.mode == 'post')
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          PUBLISH_OUTCOME: ${{ steps.publish.outcome }}
+          NOTIFY_LABEL: 예약 게시(사진·스레드)
+          KAKAO_SUCCESS_UNTIL: ${{ vars.KAKAO_SUCCESS_UNTIL }}
+          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+          KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+          KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
+          GH_SECRETS_PAT: ${{ secrets.GH_SECRETS_PAT }}
+        run: node scripts/kakao-notify.mjs
       - name: 결과 저장
         if: always()
         run: |

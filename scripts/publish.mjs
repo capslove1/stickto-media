@@ -9,6 +9,11 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { spreadTimes } from "./spread-times.mjs";
 
+// 카카오 알림용 결과 기록 (커밋하지 않는 파일. 실행 뒤 kakao-notify.mjs 가 읽는다)
+const EVENTS_FILE = new URL("../.kakao-events.json", import.meta.url);
+const events = [];
+const addEvent = (e) => { events.push(e); writeFileSync(EVENTS_FILE, JSON.stringify(events, null, 2)); };
+
 const QUEUE_FILE = new URL("../posts/queue.json", import.meta.url);
 const MEDIA_BASE = (process.env.MEDIA_BASE_URL || "https://raw.githubusercontent.com/capslove1/stickto-media/main/").replace(/\/?$/, "/");
 const IG_BASE = "https://graph.instagram.com/v26.0";
@@ -230,13 +235,13 @@ async function run(mode) {
     const label = `[${item.id}] ${ch === "instagram" ? "인스타" : "스레드"} ${chDate(item, ch)} ${item[ch].time ?? item.time}`;
     if ((mode === "post" ? Date.now() : now) - at > LATE_LIMIT_MS) {
       console.log(`${label}: 예약 시각보다 6시간 넘게 지나 올리지 않았어요.`);
-      if (mode === "post") { item.result[ch] = { missed: true, at: new Date().toISOString() }; changed = true; }
+      if (mode === "post") { item.result[ch] = { missed: true, at: new Date().toISOString() }; changed = true; addEvent({ kind: "missed", ch, date: chDate(item, ch), site: item.site ?? item.id, reason: "예약 시각보다 6시간 넘게 늦음" }); }
       continue;
     }
     const problems = validate(item, ch);
     if (problems.length) {
       console.log(`${label}: 올리지 않음 - ${problems.join(" ")}`);
-      if (mode === "post") { item.result[ch] = { error: problems.join(" "), at: new Date().toISOString() }; changed = true; }
+      if (mode === "post") { item.result[ch] = { error: problems.join(" "), at: new Date().toISOString() }; changed = true; addEvent({ kind: "fail", ch, date: chDate(item, ch), site: item.site ?? item.id, reason: problems.join(" ") }); }
       continue;
     }
     const imgs = urls(item[ch].images ?? []);
@@ -273,8 +278,10 @@ async function run(mode) {
         const r = await (ch === "instagram" ? postInstagram : postThreads)(imgs, text);
         item.result[ch] = { ...r, at: new Date().toISOString() };
         console.log(`  게시 완료: ${r.permalink ?? r.id}`);
+        addEvent({ kind: "ok", ch, date: chDate(item, ch), site: item.site ?? item.id, permalink: r.permalink });
       } catch (e) {
         item.result[ch] = { error: `${e.message} ${e.detail ?? ""}`.trim(), at: new Date().toISOString() };
+        addEvent({ kind: "fail", ch, date: chDate(item, ch), site: item.site ?? item.id, reason: e.message });
         console.log(`  에러: ${e.message}
   상세: ${e.detail ?? ""}`);
       }
