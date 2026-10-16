@@ -91,12 +91,18 @@
       "id": "2026-10-16-2100-daily",
       "type": "text",
       "date": "2026-10-16",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "21:08",
         "text": "쉬는 날 계획은 전날 밤이 제일 거창해.\n막상 그날 되면\n\"그래도 푹 쉬었으니 됐다\"로 바뀌어 있고.\n#주말"
       },
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "17917942527532448",
+          "permalink": "https://www.threads.com/@stickto_film/post/Dejf0p-lKcl",
+          "at": "2026-10-16T12:08:10.263Z"
+        }
+      }
     },
     {
       "id": "2026-10-17-0830-daily",
