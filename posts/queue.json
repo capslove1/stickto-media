@@ -125,7 +125,7 @@
       "id": "2026-10-23-H035",
       "date": "2026-10-17",
       "site": "H035",
-      "status": "approved",
+      "status": "posted",
       "instagram": {
         "images": [
           "media/2026-10-23-H035/01.jpg",
@@ -150,6 +150,24 @@
           "verify": {
             "ok": true,
             "at": "2026-10-17T05:02:36.545Z"
+          }
+        },
+        "instagram": {
+          "id": "18396751519164063",
+          "permalink": "https://www.instagram.com/p/Del-IAinKt6/",
+          "at": "2026-10-17T11:11:27.427Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-10-17T11:11:27.499Z"
+          }
+        },
+        "facebook": {
+          "id": "1290805454119001_122119223199462740",
+          "permalink": "https://www.facebook.com/122118972933462740/posts/122119223199462740",
+          "at": "2026-10-17T11:11:34.321Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-10-17T11:11:34.500Z"
           }
         }
       },
