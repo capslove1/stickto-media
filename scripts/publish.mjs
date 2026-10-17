@@ -165,7 +165,8 @@ const urls = (paths) => paths.map((p) => (/^https?:\/\//.test(p) ? p : MEDIA_BAS
 // 올린 직후 비교: 계정에서 글을 다시 불러와 내용과 사진 장수가 예약한 것과 같은지 본다.
 // 돌려주는 값: { ok: true } / { ok: false, issue } (다름) / { ok: null, issue } (확인 못 함)
 const norm = (t) => (t ?? "").replace(/\s+/g, " ").trim();
-const noTags = (t) => norm((t ?? "").replace(/#[^\s#]+/g, ""));
+// 스레드는 해시태그의 #를 떼고 그 단어를 주제 태그로 글 끝에 남긴다("#아침" → "아침"). 그래서 #만 떼고 비교한다.
+const thNorm = (t) => norm((t ?? "").replace(/#([^\s#]+)/g, "$1"));
 
 async function fetchPosted(ch, id) {
   if (ch === "instagram") {
@@ -177,7 +178,7 @@ async function fetchPosted(ch, id) {
     const att = d.attachments?.data?.[0];
     return { text: d.message, count: att ? att.subattachments?.data?.length ?? 1 : 0 };
   }
-  // 스레드: 해시태그는 주제 태그로 빠질 수 있어서 topic_tag 도 받아 본다(이 필드가 없으면 빼고 다시 받는다).
+  // 스레드: 주제 태그(topic_tag)도 받아 본다(이 필드가 없으면 빼고 다시 받는다).
   const fields = "text,media_type,children";
   const d = await th("GET", id, { fields: `${fields},topic_tag` }).catch(() => th("GET", id, { fields }));
   const count = d.media_type === "CAROUSEL_ALBUM" ? d.children?.data?.length ?? 0 : d.media_type === "IMAGE" ? 1 : 0;
@@ -186,8 +187,8 @@ async function fetchPosted(ch, id) {
 
 function compare(ch, got, text, count) {
   const issues = [];
-  // 스레드는 해시태그를 빼고 본문만 비교하고, 주제 태그가 있으면 따로 확인한다.
-  const same = ch === "threads" ? noTags(got.text) === noTags(text) : norm(got.text) === norm(text);
+  // 스레드는 #를 떼고 비교하고, 주제 태그가 있으면 따로 확인한다.
+  const same = ch === "threads" ? thNorm(got.text) === thNorm(text) : norm(got.text) === norm(text);
   if (!same) issues.push("글 내용이 예약한 글과 달라요");
   if (got.count !== count) issues.push(`사진이 ${count}장이어야 하는데 ${got.count}장이에요`);
   if (ch === "threads" && got.topic && `#${got.topic}` !== (text.match(/#[^\s#]+/) ?? [])[0]) issues.push(`주제 태그가 "${got.topic}"(으)로 올라갔어요`);
@@ -281,8 +282,8 @@ async function findPosted(item, ch, text) {
   } catch {
     console.log("  (원격 queue.json 확인은 건너뜀)");
   }
-  // 스레드는 해시태그가 주제 태그로 빠질 수 있어서 해시태그를 빼고 비교한다.
-  const key = ch === "threads" ? noTags : norm;
+  // 스레드는 해시태그의 #가 떨어진 채로 저장돼서 #를 떼고 비교한다.
+  const key = ch === "threads" ? thNorm : norm;
   const hit = (await recentPosts(ch)).find((p) => key(p.text) === key(text));
   return hit ? { id: hit.id, permalink: hit.permalink } : null;
 }
