@@ -108,12 +108,18 @@
       "id": "2026-10-17-0830-daily",
       "type": "text",
       "date": "2026-10-17",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "08:22",
         "text": "알람 끄고 \"5분만\" 했는데\n눈 떠 보면 30분 지나 있는 거 다들 알지?\n하루 중에 그 5분이 제일 달아.\n#아침"
       },
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18372577435245604",
+          "permalink": "https://www.threads.com/@stickto_film/post/DekzwGGDt6y",
+          "at": "2026-10-17T00:21:34.503Z"
+        }
+      }
     },
     {
       "id": "2026-10-23-H035",
