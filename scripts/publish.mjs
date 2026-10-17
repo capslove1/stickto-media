@@ -74,7 +74,10 @@ function client(base, token, channel) {
     const data = await res.json().catch(() => ({}));
     if (!res.ok || data.error) {
       const err = data.error ?? {};
-      throw new PostError(explain(err, channel), `${err.message ?? res.statusText} (code ${err.code ?? res.status}${err.error_subcode ? `, subcode ${err.error_subcode}` : ""})`);
+      const pe = new PostError(explain(err, channel), `${err.message ?? res.statusText} (code ${err.code ?? res.status}${err.error_subcode ? `, subcode ${err.error_subcode}` : ""})`);
+      pe.code = err.code;
+      pe.subcode = err.error_subcode;
+      throw pe;
     }
     return data;
   };
@@ -129,7 +132,17 @@ async function postThreads(images, text) {
       await waitFinished(th, id, "status", "스레드");
       children.push(id);
     }
-    ({ id: creationId } = await th("POST", "me/threads", { media_type: "CAROUSEL", children: children.join(","), text }));
+    // 4279004: 묶음 사진(자식)이 메타 서버에 아직 다 퍼지지 않음. 잠깐 기다렸다 다시 하면 된다.
+    for (let i = 1; ; i++) {
+      try {
+        ({ id: creationId } = await th("POST", "me/threads", { media_type: "CAROUSEL", children: children.join(","), text }));
+        break;
+      } catch (e) {
+        if (e.subcode !== 4279004 || i > 5) throw e;
+        console.log(`  스레드 묶음 사진 준비가 덜 됐어요. ${i * 10}초 뒤 다시 해요(${i}/5).`);
+        await sleep(i * 10_000);
+      }
+    }
   }
   await waitFinished(th, creationId, "status", "스레드");
   const { id } = await th("POST", "me/threads_publish", { creation_id: creationId });
