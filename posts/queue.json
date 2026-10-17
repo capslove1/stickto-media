@@ -177,12 +177,22 @@
       "id": "2026-10-17-2100-daily",
       "type": "text",
       "date": "2026-10-17",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "20:53",
         "text": "토요일 밤엔 시간이 두 배로 빨리 가.\n평일 밤 한 시간이랑\n분명 같은 한 시간일 텐데.\n#대구인테리어필름"
       },
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18631919269065375",
+          "permalink": "https://www.threads.com/@stickto_film/post/DemC5x1ka1N",
+          "at": "2026-10-17T11:53:13.861Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-10-17T11:53:14.126Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-10-19-0830-daily",
