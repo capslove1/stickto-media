@@ -203,7 +203,7 @@ async function verifyPost(ch, id, text, count) {
     }
     return issues.length ? { ok: false, issue: issues.join(", "), at: new Date().toISOString() } : { ok: true, at: new Date().toISOString() };
   } catch (e) {
-    return { ok: null, issue: `확인 못 함: ${e.message}`, at: new Date().toISOString() };
+    return { ok: null, issue: `확인 못 함: ${e.message} ${e.detail ?? ""}`.trim(), at: new Date().toISOString() };
   }
 }
 
@@ -216,8 +216,13 @@ async function verifyRecent() {
       const r = item.result?.[ch];
       const c = ch === "facebook" ? item.instagram : item[ch];
       if (!r?.id || !c || !(Date.parse(r.at ?? 0) > since)) continue;
-      const v = await verifyPost(ch, r.id, ch === "threads" ? c.text : c.caption, (c.images ?? []).length);
+      const text = ch === "threads" ? c.text : c.caption;
+      const v = await verifyPost(ch, r.id, text, (c.images ?? []).length);
       console.log(`[${item.id}] ${CH_NAME[ch]}: ${v.ok ? "같음" : v.issue}`);
+      if (v.ok === false) {
+        const got = await fetchPosted(ch, r.id);
+        console.log(`  예약: ${JSON.stringify(text)}\n  계정: ${JSON.stringify(got)}`);
+      }
     }
   }
 }
