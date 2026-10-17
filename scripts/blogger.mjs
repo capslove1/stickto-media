@@ -70,6 +70,20 @@ async function findPosted(post) {
   return null;
 }
 
+// 올린 직후 비교: 블로그에서 글을 다시 불러와 제목과 사진 장수가 같은지 본다.
+async function verifyPost(postId, post, html) {
+  const imgs = (t) => (t.match(/<img/g) ?? []).length;
+  try {
+    const { data } = await gapi(`${API}/posts/${postId}`);
+    const issues = [];
+    if (norm(data.title) !== norm(post.title)) issues.push("제목이 예약한 글과 달라요");
+    if (imgs(data.content ?? "") !== imgs(html)) issues.push(`사진이 ${imgs(html)}장이어야 하는데 ${imgs(data.content ?? "")}장이에요`);
+    return issues.length ? { ok: false, issue: issues.join(", "), at: new Date().toISOString() } : { ok: true, at: new Date().toISOString() };
+  } catch (e) {
+    return { ok: null, issue: `확인 못 함: ${e.message}`, at: new Date().toISOString() };
+  }
+}
+
 async function run(mode) {
   const now = mode !== "post" && process.env.NOW ? Date.parse(process.env.NOW) : Date.now();
   if (Number.isNaN(now)) throw new Error("NOW 값이 날짜 형식이 아니에요. 예) 2026-10-20T11:20:00+09:00");
@@ -129,6 +143,10 @@ async function run(mode) {
         post.result = { postId: data.id, url: data.url, at: new Date().toISOString() };
         console.log(`  게시 완료: ${data.url}`);
         addEvent({ kind: "ok", date: post.date, site: post.site, permalink: data.url });
+        save();
+        post.result.verify = await verifyPost(data.id, post, html);
+        console.log(`  비교 검사: ${post.result.verify.ok ? "예약한 글과 같아요" : post.result.verify.issue}`);
+        if (post.result.verify.ok === false) addEvent({ kind: "fail", date: post.date, site: post.site, reason: `올라갔지만 ${post.result.verify.issue}` });
       }
       post.status = "posted";
     } catch (e) {

@@ -3,11 +3,14 @@
 //   --dry-run : 올릴 대상과 사진 주소만 보여 준다 (기본값)
 //   --post    : 실제로 올리고 결과를 queue.json 에 기록한다
 //   --check   : 두 계정 연결만 확인한다
+//   --verify  : 최근 3일 동안 올라간 글을 계정에서 다시 불러와 예약한 글과 비교만 한다
+// 올리기 전 검사(checks.mjs)에 걸리면 올리지 않고, 올린 직후에는 다시 불러와 비교한다(다르면 카톡).
 // 토큰은 환경 변수(GitHub Secrets)로만 받고, 화면에 출력하지 않는다.
 
 import { readFileSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { spreadTimes } from "./spread-times.mjs";
+import { validate } from "./checks.mjs";
 
 // 카카오 알림용 결과 기록 (커밋하지 않는 파일. 실행 뒤 kakao-notify.mjs 가 읽는다)
 const EVENTS_FILE = new URL("../.kakao-events.json", import.meta.url);
@@ -159,22 +162,64 @@ const scheduledAt = (item, ch) => Date.parse(`${chDate(item, ch)}T${item[ch].tim
 const kst = (ms) => new Date(ms + KST_OFFSET_MS).toISOString().slice(0, 16).replace("T", " ");
 const urls = (paths) => paths.map((p) => (/^https?:\/\//.test(p) ? p : MEDIA_BASE + p));
 
-// 스레드는 이모지를 UTF-8 바이트 수로 센다.
-const threadsLength = (t) => [...t].reduce((n, ch) => n + (/\p{Extended_Pictographic}/u.test(ch) ? Buffer.byteLength(ch) : 1), 0);
+// 올린 직후 비교: 계정에서 글을 다시 불러와 내용과 사진 장수가 예약한 것과 같은지 본다.
+// 돌려주는 값: { ok: true } / { ok: false, issue } (다름) / { ok: null, issue } (확인 못 함)
+const norm = (t) => (t ?? "").replace(/\s+/g, " ").trim();
+const noTags = (t) => norm((t ?? "").replace(/#[^\s#]+/g, ""));
 
-function validate(item, ch) {
-  const problems = [];
-  const c = item[ch];
-  if (ch === "threads") {
-    const tags = c.text.match(/#\S+/g) ?? [];
-    if (tags.length > 1) problems.push(`스레드 해시태그가 ${tags.length}개예요(1개만).`);
-    if (threadsLength(c.text) > 500) problems.push("스레드 글이 500자를 넘어요.");
-  } else if (ch === "instagram" && c.caption.length > 2200) problems.push("인스타 캡션이 2200자를 넘어요.");
-  const n = (c.images ?? []).length;
-  if (ch === "instagram" && (n < 1 || n > 10)) problems.push(`인스타 사진은 1~10장이어야 해요(지금 ${n}장).`);
-  if (ch === "threads" && n > 10) problems.push(`스레드 사진은 10장 이하여야 해요(지금 ${n}장).`);
-  if (ch === "facebook" && n < 1) problems.push("페이스북에 올릴 사진이 없어요.");
-  return problems;
+async function fetchPosted(ch, id) {
+  if (ch === "instagram") {
+    const d = await ig("GET", id, { fields: "caption,media_type,permalink,children" });
+    return { text: d.caption, count: d.media_type === "CAROUSEL_ALBUM" ? d.children?.data?.length ?? 0 : 1 };
+  }
+  if (ch === "facebook") {
+    const d = await fb("GET", id, { fields: "message,attachments{subattachments}" });
+    const att = d.attachments?.data?.[0];
+    return { text: d.message, count: att ? att.subattachments?.data?.length ?? 1 : 0 };
+  }
+  // 스레드: 해시태그는 주제 태그로 빠질 수 있어서 topic_tag 도 받아 본다(이 필드가 없으면 빼고 다시 받는다).
+  const fields = "text,media_type,children";
+  const d = await th("GET", id, { fields: `${fields},topic_tag` }).catch(() => th("GET", id, { fields }));
+  const count = d.media_type === "CAROUSEL_ALBUM" ? d.children?.data?.length ?? 0 : d.media_type === "IMAGE" ? 1 : 0;
+  return { text: d.text, count, topic: d.topic_tag };
+}
+
+function compare(ch, got, text, count) {
+  const issues = [];
+  // 스레드는 해시태그를 빼고 본문만 비교하고, 주제 태그가 있으면 따로 확인한다.
+  const same = ch === "threads" ? noTags(got.text) === noTags(text) : norm(got.text) === norm(text);
+  if (!same) issues.push("글 내용이 예약한 글과 달라요");
+  if (got.count !== count) issues.push(`사진이 ${count}장이어야 하는데 ${got.count}장이에요`);
+  if (ch === "threads" && got.topic && `#${got.topic}` !== (text.match(/#[^\s#]+/) ?? [])[0]) issues.push(`주제 태그가 "${got.topic}"(으)로 올라갔어요`);
+  return issues;
+}
+
+async function verifyPost(ch, id, text, count) {
+  try {
+    let issues = compare(ch, await fetchPosted(ch, id), text, count);
+    if (issues.length) {
+      await sleep(10_000); // 막 올린 글은 잠깐 늦게 보일 수 있어서 한 번 더 본다
+      issues = compare(ch, await fetchPosted(ch, id), text, count);
+    }
+    return issues.length ? { ok: false, issue: issues.join(", "), at: new Date().toISOString() } : { ok: true, at: new Date().toISOString() };
+  } catch (e) {
+    return { ok: null, issue: `확인 못 함: ${e.message}`, at: new Date().toISOString() };
+  }
+}
+
+// --verify: 최근 3일 동안 올라간 글을 다시 비교해서 보여 주기만 한다(기록·알림 없음). 비교 검사를 시험할 때 쓴다.
+async function verifyRecent() {
+  const queue = JSON.parse(readFileSync(QUEUE_FILE, "utf8"));
+  const since = Date.now() - 3 * 86_400_000;
+  for (const item of queue.posts) {
+    for (const ch of CHANNELS) {
+      const r = item.result?.[ch];
+      const c = ch === "facebook" ? item.instagram : item[ch];
+      if (!r?.id || !c || !(Date.parse(r.at ?? 0) > since)) continue;
+      const v = await verifyPost(ch, r.id, ch === "threads" ? c.text : c.caption, (c.images ?? []).length);
+      console.log(`[${item.id}] ${CH_NAME[ch]}: ${v.ok ? "같음" : v.issue}`);
+    }
+  }
 }
 
 async function checkImages(list) {
@@ -231,8 +276,9 @@ async function findPosted(item, ch, text) {
   } catch {
     console.log("  (원격 queue.json 확인은 건너뜀)");
   }
-  const norm = (t) => (t ?? "").replace(/\s+/g, " ").trim();
-  const hit = (await recentPosts(ch)).find((p) => norm(p.text) === norm(text));
+  // 스레드는 해시태그가 주제 태그로 빠질 수 있어서 해시태그를 빼고 비교한다.
+  const key = ch === "threads" ? noTags : norm;
+  const hit = (await recentPosts(ch)).find((p) => key(p.text) === key(text));
   return hit ? { id: hit.id, permalink: hit.permalink } : null;
 }
 
@@ -321,6 +367,11 @@ async function run(mode) {
         item.result[ch] = { ...r, at: new Date().toISOString() };
         console.log(`  게시 완료: ${r.permalink ?? r.id}`);
         addEvent({ kind: "ok", ch, date: chDate(item, ch), site: item.site ?? item.id, permalink: r.permalink });
+        save();
+        const v = await verifyPost(ch, r.id, text, imgs.length);
+        item.result[ch].verify = v;
+        console.log(`  비교 검사: ${v.ok ? "예약한 글과 같아요" : v.issue}`);
+        if (v.ok === false) addEvent({ kind: "fail", ch, date: chDate(item, ch), site: item.site ?? item.id, reason: `올라갔지만 ${v.issue}` });
       } catch (e) {
         item.result[ch] = { error: `${e.message} ${e.detail ?? ""}`.trim(), at: new Date().toISOString() };
         addEvent({ kind: "fail", ch, date: chDate(item, ch), site: item.site ?? item.id, reason: e.message });
@@ -349,11 +400,11 @@ async function run(mode) {
 }
 
 const mode = (process.argv[2] || "--dry-run").replace(/^--/, "");
-if (!["dry-run", "post", "check"].includes(mode)) {
-  console.log("사용법: node scripts/publish.mjs --dry-run | --post | --check");
+if (!["dry-run", "post", "check", "verify"].includes(mode)) {
+  console.log("사용법: node scripts/publish.mjs --dry-run | --post | --check | --verify");
   process.exit(1);
 }
-(mode === "check" ? check() : (mode === "post" && (!IG_TOKEN || !TH_TOKEN || !IG_USER_ID))
+(mode === "check" ? check() : mode === "verify" ? verifyRecent() : (mode === "post" && (!IG_TOKEN || !TH_TOKEN || !IG_USER_ID))
   ? Promise.reject(new PostError("토큰 또는 사용자 ID 환경 변수가 없어요. GitHub Secrets 를 확인해 주세요."))
   : run(mode)
 ).catch((e) => {

@@ -45,7 +45,8 @@ export async function refreshKakao() {
 }
 
 // 나에게 보내기. 실패해도 게시 작업은 그대로 두려고 에러를 던지지 않고 false 를 돌려준다.
-export async function sendKakao(text, linkUrl = "https://github.com/capslove1/stickto-media/actions") {
+// buttons: [{ title, url }] 최대 2개. 주면 "실행 기록 보기" 대신 이 버튼들을 단다.
+export async function sendKakao(text, linkUrl = "https://github.com/capslove1/stickto-media/actions", buttons = []) {
   if (!kakaoReady()) {
     console.log("카카오 알림: 비밀값이 없어서 건너뜀");
     return false;
@@ -56,8 +57,9 @@ export async function sendKakao(text, linkUrl = "https://github.com/capslove1/st
       object_type: "text",
       text: text.slice(0, 200), // 텍스트 템플릿은 200자까지
       link: { web_url: linkUrl, mobile_web_url: linkUrl },
-      button_title: "실행 기록 보기",
     };
+    if (buttons.length) template.buttons = buttons.slice(0, 2).map((b) => ({ title: b.title, link: { web_url: b.url, mobile_web_url: b.url } }));
+    else template.button_title = "실행 기록 보기";
     const res = await fetch("https://kapi.kakao.com/v2/api/talk/memo/default/send", {
       method: "POST",
       headers: { Authorization: `Bearer ${accessToken}` },
@@ -71,12 +73,6 @@ export async function sendKakao(text, linkUrl = "https://github.com/capslove1/st
     console.log(`::warning::카카오 알림을 보내지 못했어요: ${e.message}`);
     return false;
   }
-}
-
-// 성공 알림을 보낼 기간인지 (KAKAO_SUCCESS_UNTIL 날짜까지, 한국 날짜 기준)
-export function successOn() {
-  const until = process.env.KAKAO_SUCCESS_UNTIL;
-  return Boolean(until) && kstDate() <= until;
 }
 
 // 게시 결과(events)를 한 메시지로 묶는다. events: [{ kind: ok|fail|missed, ch, date, site, reason, permalink }]

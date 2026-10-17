@@ -1,0 +1,44 @@
+name: 일정 변경 알림
+
+on:
+  # 사람이 대기열을 바꿔 올리면 바뀐 일정표를 카톡으로 보낸다. 게시 결과 기록(GITHUB_TOKEN 커밋)은 이 실행을 깨우지 않는다.
+  push:
+    branches: [main]
+    paths: [posts/queue.json, blogger/queue.json]
+  workflow_dispatch:
+    inputs:
+      base:
+        description: "비교할 이전 커밋 (비우면 시험: 앞으로 3일 일정을 새로 잡힌 것처럼 보내요)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    # 알림 켜기 전에는(변수 SCHEDULE_NOTIFY 가 on 이 아니면) 손으로 돌릴 때만 보낸다.
+    if: github.event_name == 'workflow_dispatch' || vars.SCHEDULE_NOTIFY == 'on'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: 일정 비교 후 카톡
+        env:
+          BASE: ${{ github.event_name == 'push' && github.event.before || inputs.base }}
+          NOTIFY_LABEL: 스레드·인스타·페북·블로그
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+          KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+          KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
+          GH_SECRETS_PAT: ${{ secrets.GH_SECRETS_PAT }}
+        run: |
+          if [ -n "$BASE" ]; then
+            git fetch --quiet --depth=1 origin "$BASE" || true
+            node scripts/schedule-change.mjs "$BASE"
+          else
+            node scripts/schedule-change.mjs --test
+          fi
