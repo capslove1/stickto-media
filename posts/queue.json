@@ -256,12 +256,22 @@
       "id": "2026-10-19-2100-daily",
       "type": "text",
       "date": "2026-10-19",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "21:14",
         "text": "냉장고 문 열고 한참 서 있다가\n뭐 꺼내려 했는지 까먹고 그냥 닫을 때 있어.\n그러고 5분 뒤에 또 열어 봐.\n냉장고도 좀 당황했을 거야.\n#대구인테리어필름"
       },
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "17959904691249779",
+          "permalink": "https://www.threads.com/@stickto_film/post/DerO5Q1m8KI",
+          "at": "2026-10-19T12:14:07.025Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-10-19T12:14:07.800Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-10-20-0830-daily",
