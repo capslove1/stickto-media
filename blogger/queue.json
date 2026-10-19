@@ -24,15 +24,22 @@
     },
     {
       "id": "224445749429",
+      "site": "H072",
       "naverUrl": "https://blog.naver.com/stickto_film/224445749429",
       "naverTitle": "대구 월배 아파트 몰딩·방문 시트지｜체리색에서 차분한 연그레이로 바꾼 집",
       "naverDate": "2026-10-18 19:57",
       "date": "2026-10-21",
       "time": "11:30",
-      "title": "",
-      "file": "",
-      "labels": [],
-      "status": "new",
+      "title": "대구 월배 아파트 문틀 시트지｜체리색 방문·문틀, 연그레이로 바꾼 현장",
+      "file": "blogger/posts/224445749429.html",
+      "labels": [
+        "방문시트지",
+        "문틀시트지",
+        "문틀필름",
+        "대구인테리어필름",
+        "월배"
+      ],
+      "status": "approved",
       "result": {}
     },
     {
@@ -42,10 +49,16 @@
       "naverDate": "2026-10-19 17:30",
       "date": "2026-10-22",
       "time": "11:30",
-      "title": "",
-      "file": "",
-      "labels": [],
-      "status": "new",
+      "title": "대구 인테리어필름 시트지 시공 가격｜방문·문틀·싱크대·샷시 부위별 기본 가격표",
+      "file": "blogger/posts/224445769112.html",
+      "labels": [
+        "인테리어필름시공가격",
+        "싱크대시트지",
+        "방문시트지",
+        "문틀시트지",
+        "대구인테리어필름"
+      ],
+      "status": "approved",
       "result": {}
     }
   ]
