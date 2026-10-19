@@ -198,12 +198,22 @@
       "id": "2026-10-19-0830-daily",
       "type": "text",
       "date": "2026-10-19",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "08:41",
         "text": "월요일 알람은 똑같은 소리인데 유난히 크게 들려.\n주말이랑 같은 폰, 같은 소리인데.\n기분 탓이라기엔 너무 커.\n#대구인테리어필름"
       },
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "17883918684523178",
+          "permalink": "https://www.threads.com/@stickto_film/post/Dep78hTESPd",
+          "at": "2026-10-19T00:09:23.684Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-10-19T00:09:25.232Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-10-26-H162",
