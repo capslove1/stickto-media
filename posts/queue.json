@@ -357,12 +357,18 @@
       "id": "2026-10-20-2100-daily",
       "type": "text",
       "date": "2026-10-20",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "20:49",
         "text": "우산 챙긴 날은 비가 안 오고,\n안 챙긴 날엔 꼭 와.\n하늘이 우리 가방 속을 보고 있는 게 분명해.\n#대구인테리어필름"
       },
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18111963686234420",
+          "permalink": "https://www.threads.com/@stickto_film/post/Detw1DqGxal",
+          "note": "이미 올라가 있어 다시 올리지 않음"
+        }
+      }
     },
     {
       "id": "2026-10-21-0830-daily",
