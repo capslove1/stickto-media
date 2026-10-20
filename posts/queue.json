@@ -277,12 +277,22 @@
       "id": "2026-10-20-0830-daily",
       "type": "text",
       "date": "2026-10-20",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "08:26",
         "text": "대청소하다 보면 꼭 손이 멈추는 데가 있어.\n문 모서리 살짝 벗겨진 곳, 손잡이 주변 손때.\n닦아도 안 없어지는 그런 데.\n필름 하는 사람 눈엔 그런 데가 유독 잘 보여.\n#대구인테리어필름"
       },
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "17962521651247063",
+          "permalink": "https://www.threads.com/@stickto_film/post/Desm4T2GAQB",
+          "at": "2026-10-20T01:03:02.176Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-10-20T01:03:02.288Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-10-28-H064",
