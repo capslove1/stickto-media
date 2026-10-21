@@ -432,12 +432,22 @@
       "id": "2026-10-21-2100-daily",
       "type": "text",
       "date": "2026-10-21",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "21:03",
         "text": "수요일은 딱 한 주의 가운데야.\n올라온 만큼만 내려가면 된다고 생각하면 좀 나아.\n반 왔어, 다들.\n#대구인테리어필름"
       },
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18355649359175805",
+          "permalink": "https://www.threads.com/@stickto_film/post/DewXOaqlq3-",
+          "at": "2026-10-21T12:03:11.688Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-10-21T12:03:11.786Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-10-22-0830-daily",
