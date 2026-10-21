@@ -47,8 +47,16 @@
         "대구인테리어필름",
         "월배"
       ],
-      "status": "approved",
-      "result": {}
+      "status": "posted",
+      "result": {
+        "postId": "8514737245190085383",
+        "url": "https://stickto-film.blogspot.com/2026/10/blog-post_20.html",
+        "at": "2026-10-21T02:30:01.017Z",
+        "verify": {
+          "ok": true,
+          "at": "2026-10-21T02:30:01.129Z"
+        }
+      }
     },
     {
       "id": "224445769112",
