@@ -374,12 +374,22 @@
       "id": "2026-10-21-0830-daily",
       "type": "text",
       "date": "2026-10-21",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "08:33",
         "text": "마트엔 분명 우유 하나 사러 갔어.\n나올 때는 양손이 무거운데\n정작 우유는 없어.\n#대구인테리어필름"
       },
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "17920265151450788",
+          "permalink": "https://www.threads.com/@stickto_film/post/DevIR-wmU1g",
+          "at": "2026-10-21T00:33:18.172Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-10-21T00:33:18.249Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-10-30-H197",
