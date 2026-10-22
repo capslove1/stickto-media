@@ -74,8 +74,16 @@
         "문틀시트지",
         "대구인테리어필름"
       ],
-      "status": "approved",
-      "result": {}
+      "status": "posted",
+      "result": {
+        "postId": "6689666786458818380",
+        "url": "https://stickto-film.blogspot.com/2026/10/blog-post_21.html",
+        "at": "2026-10-22T02:30:01.089Z",
+        "verify": {
+          "ok": true,
+          "at": "2026-10-22T02:30:01.301Z"
+        }
+      }
     }
   ]
 }
