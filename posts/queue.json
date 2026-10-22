@@ -453,12 +453,22 @@
       "id": "2026-10-22-0830-daily",
       "type": "text",
       "date": "2026-10-22",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "08:18",
         "text": "매일 보는 문은 낡은 줄도 몰라.\n그러다 남의 집 사진 보고 나서야\n\"우리 집 문 색이 원래 이랬나?\" 싶어지지.\n#대구인테리어필름"
       },
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "17970756798187962",
+          "permalink": "https://www.threads.com/@stickto_film/post/DextjSYFmjD",
+          "at": "2026-10-22T00:37:31.195Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-10-22T00:37:31.386Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-10-22-2100-daily",
