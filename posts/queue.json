@@ -492,12 +492,22 @@
       "id": "2026-10-22-2100-daily",
       "type": "text",
       "date": "2026-10-22",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "20:57",
         "text": "리모컨은 꼭 찾을 때만 안 보여.\n온 집안 다 뒤지다가 소파 쿠션 사이에서 나오면\n괜히 반갑기까지 해.\n#대구인테리어필름"
       },
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18090603140300219",
+          "permalink": "https://www.threads.com/@stickto_film/post/Dey7Vc8m9UY",
+          "at": "2026-10-22T11:57:16.272Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-10-22T11:57:16.612Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-10-23-0830-daily",
