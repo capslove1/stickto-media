@@ -513,12 +513,22 @@
       "id": "2026-10-23-0830-daily",
       "type": "text",
       "date": "2026-10-23",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "08:41",
         "text": "금요일 아침은 발걸음부터 달라.\n할 일은 그대로 남아 있는데\n마음이 먼저 퇴근한 느낌이랄까.\n#대구인테리어필름"
       },
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18134542171676101",
+          "permalink": "https://www.threads.com/@stickto_film/post/De0SE6JDXgb",
+          "at": "2026-10-23T00:35:05.854Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-10-23T00:35:05.923Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-10-22-H193",
