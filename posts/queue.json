@@ -413,7 +413,7 @@
       "id": "2026-10-30-H197",
       "date": "2026-10-21",
       "site": "H197",
-      "status": "approved",
+      "status": "posted",
       "instagram": {
         "date": "2026-10-24",
         "images": [
@@ -441,6 +441,24 @@
           "verify": {
             "ok": true,
             "at": "2026-10-21T03:02:41.730Z"
+          }
+        },
+        "instagram": {
+          "id": "18096211745439199",
+          "permalink": "https://www.instagram.com/p/De389LmnBxI/",
+          "at": "2026-10-24T10:47:35.859Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-10-24T10:47:35.955Z"
+          }
+        },
+        "facebook": {
+          "id": "1290805454119001_122120645373462740",
+          "permalink": "https://www.facebook.com/122118972933462740/posts/122120645373462740",
+          "at": "2026-10-24T10:47:43.422Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-10-24T10:47:43.712Z"
           }
         }
       },
