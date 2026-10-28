@@ -79,6 +79,7 @@ export async function sendKakao(text, linkUrl = "https://github.com/capslove1/st
 export function formatEvents(events) {
   const CH = { instagram: "인스타", facebook: "페이스북", threads: "스레드", reels: "릴스", shorts: "쇼츠", blogger: "구글 블로그" };
   const lines = events.map((e) => {
+    if (e.kind === "notice") return `[알림] ${e.text}`;
     const head = e.kind === "ok" ? "[완료]" : e.kind === "missed" ? "[missed]" : "[실패]";
     const tail = e.kind === "ok" ? "" : ` · ${(e.reason ?? "").slice(0, 60)}`;
     return `${head} ${short(e.date)} ${CH[e.ch] ?? e.ch} ${e.site ?? ""}${tail}`.trim();

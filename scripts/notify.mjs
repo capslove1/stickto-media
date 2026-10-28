@@ -1,11 +1,12 @@
 // 게시 실행이 끝난 뒤 GitHub Issue 로 알린다.
 // - 남은 approved 글이 3개 이하이면 "예약 글 N개 남음 - 대기열 채워주세요"
+// - 앞으로 3일 안에 예약된 스레드 글(일상 글 + 시공 글의 스레드)이 3개 이하이면 이슈 + 카톡(하루 한 번)
 // - 실패(failed / partial / missed)한 글마다 "게시 실패 - 날짜 현장번호"
 // - 실행 자체가 실패하면 "게시 실패 - 날짜 실행 오류"
 // 같은 제목의 열린 Issue 가 있으면 새로 만들지 않는다.
 // 시험: NOTIFY_DRY=1 이면 GitHub 에 요청하지 않고 할 일만 보여 준다. QUEUE_FILE 로 다른 파일을 읽을 수 있다.
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
 
 const QUEUE_FILE = process.env.QUEUE_FILE || new URL("../posts/queue.json", import.meta.url);
 const REPO = process.env.REPO;
@@ -15,6 +16,8 @@ const OUTCOME = process.env.PUBLISH_OUTCOME || "success";
 const DRY = process.env.NOTIFY_DRY === "1";
 const LOW_LIMIT = 3;
 const MENTION = "@capslove1";
+const THREADS_DAYS = 3;
+const KAKAO_EVENTS_FILE = new URL("../.kakao-events.json", import.meta.url);
 
 const todayKst = () => new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 
@@ -77,6 +80,33 @@ async function main() {
       `아직 올라가지 않은 승인된 시공 글(사진·릴스)이 ${left.length}개 남았어요.\n\n${list}\n\nClaude 에게 "대기열 확인해 줘"라고 말하면 다음 2주 치 글을 만들어 보여 줘요.`);
   } else {
     console.log(`남은 시공 글 ${left.length}개 - 알림 없음`);
+  }
+
+  // 4) 스레드 대기열 부족: 일상 글이 바닥나도 알 수 있게 스레드 글만 따로 센다.
+  const today = todayKst();
+  const until = new Date(Date.parse(`${today}T00:00:00Z`) + THREADS_DAYS * 86400 * 1000).toISOString().slice(0, 10);
+  const threadsLeft = queue.posts.filter((p) => {
+    if (!p.threads || p.status !== "approved" || p.result?.threads?.permalink) return false;
+    const d = p.threads.date ?? p.date;
+    return d >= today && d <= until;
+  });
+  if (threadsLeft.length <= LOW_LIMIT) {
+    const list = threadsLeft.map((p) => `- ${p.threads.date ?? p.date} ${p.threads.time ?? ""} ${p.site ?? "일상 글"}`).join("\n") || "- (없음)";
+    await createIssue("스레드 예약 글 부족 - 대기열 채워주세요",
+      `앞으로 ${THREADS_DAYS}일 안에 올라갈 스레드 글이 ${threadsLeft.length}개뿐이에요.\n\n${list}\n\nClaude 에게 "스레드 글 채워 줘"라고 말해 주세요.`);
+    if (queue.threadsLowNotified !== today) {
+      const msg = `스레드 예약 글이 앞으로 ${THREADS_DAYS}일 안에 ${threadsLeft.length}개뿐이에요. 대기열을 채워 주세요.`;
+      if (DRY) console.log(`[시험] 카톡 알림 예정: ${msg}`);
+      else {
+        const events = existsSync(KAKAO_EVENTS_FILE) ? JSON.parse(readFileSync(KAKAO_EVENTS_FILE, "utf8")) : [];
+        events.push({ kind: "notice", text: msg });
+        writeFileSync(KAKAO_EVENTS_FILE, JSON.stringify(events, null, 2), "utf8");
+        queue.threadsLowNotified = today;
+        changed = true;
+      }
+    }
+  } else {
+    console.log(`앞으로 ${THREADS_DAYS}일 스레드 글 ${threadsLeft.length}개 - 알림 없음`);
   }
 
   if (changed && !DRY) writeFileSync(QUEUE_FILE, JSON.stringify(queue, null, 2) + "\n", "utf8");
