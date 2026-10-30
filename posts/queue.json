@@ -776,12 +776,22 @@
       "id": "2026-10-30-2100-daily",
       "type": "text",
       "date": "2026-10-30",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "21:07",
         "text": "빨래한 이불 새로 깔고 눕는 순간 있잖아.\n나도 모르게 \"아~\" 소리가 한 번 새어 나와.\n보송한 촉감에 섬유유연제 냄새까지 더해지면\n그날 있었던 일 절반은 그냥 잊혀.\n어떤 방향제도 그 냄새는 못 따라오더라.\n이불 빨래는 귀찮은데, 그 첫날 밤 때문에 또 하게 돼.\n#대구인테리어필름"
       },
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18088472210707801",
+          "permalink": "https://www.threads.com/@stickto_film/post/DfHi1mAlDby",
+          "at": "2026-10-30T12:07:10.834Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-10-30T12:07:10.956Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-10-31-0830-daily",
