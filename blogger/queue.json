@@ -90,39 +90,60 @@
       "naverUrl": "https://blog.naver.com/stickto_film/224445774877",
       "naverTitle": "대구 상인동 아파트 방문·문틀 시트지｜짙은 우드 문과 화장대, 밝게 바꾼 집",
       "naverDate": "2026-10-22 15:30",
-      "date": "2026-10-26",
+      "date": "2026-11-04",
       "time": "11:30",
-      "title": "",
-      "file": "",
-      "labels": [],
-      "status": "new",
-      "result": {}
+      "title": "대구 상인동 아파트 화장대·방문 시트지｜짙은 우드를 화이트와 그레이로 나눠 바꾼 현장",
+      "file": "blogger/posts/224445774877.html",
+      "labels": [
+        "화장대시트지",
+        "방문시트지",
+        "문틀시트지",
+        "대구인테리어필름",
+        "상인동"
+      ],
+      "status": "approved",
+      "result": {},
+      "site": "H027"
     },
     {
       "id": "224455830355",
       "naverUrl": "https://blog.naver.com/stickto_film/224455830355",
       "naverTitle": "대구 아파트 싱크대 시트지 재시공｜낡은 시트지 벗겨 내고 아이보리로, 붙박이장은 화이트로",
       "naverDate": "2026-10-27 20:50",
-      "date": "2026-10-30",
+      "date": "2026-11-11",
       "time": "11:30",
-      "title": "",
-      "file": "",
-      "labels": [],
-      "status": "new",
-      "result": {}
+      "title": "싱크대 시트지 재시공｜기존 시트지 위에 붙일까, 벗기고 붙일까 (대구 아파트 현장)",
+      "file": "blogger/posts/224455830355.html",
+      "labels": [
+        "싱크대시트지",
+        "싱크대시트지재시공",
+        "붙박이장시트지",
+        "대구인테리어필름",
+        "싱크대필름"
+      ],
+      "status": "approved",
+      "result": {},
+      "site": "H097"
     },
     {
       "id": "224455834371",
       "naverUrl": "https://blog.naver.com/stickto_film/224455834371",
       "naverTitle": "대구 월성동 아파트 방문 시트지·붙박이장 화이트｜문틀·몰딩·걸레받이까지 한 톤으로",
       "naverDate": "2026-10-30 10:00",
-      "date": "2026-11-02",
+      "date": "2026-11-18",
       "time": "11:30",
-      "title": "",
-      "file": "",
-      "labels": [],
-      "status": "new",
-      "result": {}
+      "title": "대구 월성동 아파트 방문 시트지｜문틀·걸레받이·붙박이장까지 화이트로 맞춘 현장",
+      "file": "blogger/posts/224455834371.html",
+      "labels": [
+        "방문시트지",
+        "문틀시트지",
+        "걸레받이시트지",
+        "대구인테리어필름",
+        "월성동"
+      ],
+      "status": "approved",
+      "result": {},
+      "site": "H019"
     }
   ]
 }
