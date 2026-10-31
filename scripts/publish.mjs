@@ -285,7 +285,7 @@ async function check() {
   } else console.log("::warning::페이스북 비밀값(FB_PAGE_TOKEN, FB_PAGE_ID)이 없어요.");
 }
 
-// 최근 게시물 10개 (중복 게시 확인용)
+// 최근 게시물 (중복 게시 확인용): 인스타·페북 10개, 스레드 25개(하루 2~3개라 다시 예약한 글도 걸러지게)
 async function recentPosts(ch) {
   if (ch === "facebook") {
     const { data } = await fb("GET", `${FB_PAGE_ID}/posts`, { fields: "id,message,permalink_url", limit: "10" });
@@ -293,7 +293,7 @@ async function recentPosts(ch) {
   }
   const { data } = ch === "instagram"
     ? await ig("GET", `${IG_USER_ID}/media`, { fields: "id,caption,permalink", limit: "10" })
-    : await th("GET", "me/threads", { fields: "id,text,permalink", limit: "10" });
+    : await th("GET", "me/threads", { fields: "id,text,permalink", limit: "25" });
   return (data ?? []).map((p) => ({ id: p.id, permalink: p.permalink, text: ch === "instagram" ? p.caption : p.text }));
 }
 
