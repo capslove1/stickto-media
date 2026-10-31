@@ -119,6 +119,19 @@ async function postInstagram(images, caption) {
   return { id, permalink };
 }
 
+// 4279009: 방금 만든 컨테이너·글을 메타 서버가 아직 못 찾음("does not exist"). 잠깐 기다렸다 다시 하면 된다.
+async function retryNotFound(fn, label) {
+  for (let i = 1; ; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      if (e.subcode !== 4279009 || i > 5) throw e;
+      console.log(`  ${label}: 메타 서버가 아직 준비 중이에요. ${i * 5}초 뒤 다시 해요(${i}/5).`);
+      await sleep(i * 5_000);
+    }
+  }
+}
+
 async function postThreads(images, text) {
   let creationId;
   if (images.length === 0) {
@@ -144,9 +157,9 @@ async function postThreads(images, text) {
       }
     }
   }
-  await waitFinished(th, creationId, "status", "스레드");
-  const { id } = await th("POST", "me/threads_publish", { creation_id: creationId });
-  const { permalink } = await th("GET", id, { fields: "permalink" });
+  await retryNotFound(() => waitFinished(th, creationId, "status", "스레드"), "스레드 준비 확인");
+  const { id } = await retryNotFound(() => th("POST", "me/threads_publish", { creation_id: creationId }), "스레드 게시");
+  const { permalink } = await retryNotFound(() => th("GET", id, { fields: "permalink" }), "스레드 주소 확인");
   return { id, permalink };
 }
 
