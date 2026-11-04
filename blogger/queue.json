@@ -101,8 +101,16 @@
         "대구인테리어필름",
         "상인동"
       ],
-      "status": "approved",
-      "result": {},
+      "status": "posted",
+      "result": {
+        "postId": "2013157077252752240",
+        "url": "https://stickto-film.blogspot.com/2026/11/blog-post.html",
+        "at": "2026-11-04T02:30:01.309Z",
+        "verify": {
+          "ok": true,
+          "at": "2026-11-04T02:30:01.446Z"
+        }
+      },
       "site": "H027"
     },
     {
@@ -144,6 +152,19 @@
       "status": "approved",
       "result": {},
       "site": "H019"
+    },
+    {
+      "id": "224462562941",
+      "naverUrl": "https://blog.naver.com/stickto_film/224462562941",
+      "naverTitle": "대구 율하 아파트 싱크대·방문 시트지｜거실 기둥부터 주방, 문까지 화이트 한 톤으로 맞춘 집",
+      "naverDate": "2026-11-04 10:20",
+      "date": "2026-11-07",
+      "time": "11:30",
+      "title": "",
+      "file": "",
+      "labels": [],
+      "status": "new",
+      "result": {}
     }
   ]
 }
