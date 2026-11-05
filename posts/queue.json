@@ -1000,12 +1000,22 @@
       "id": "2026-11-05-0830-daily",
       "type": "text",
       "date": "2026-11-05",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "08:19",
         "text": "새 칫솔 처음 쓰는 날은 이를 좀 더 오래 닦게 돼.\n새 운동화 신은 날은 물웅덩이를 빙 돌아가고,\n새 차 뽑은 사람은 한동안 주차를 제일 구석 자리에 하지.\n새것은 사람을 잠깐 조심스럽고 착하게 만드는 것 같아.\n그 마음이 한 달 가면 꽤 오래 간 거고.\n그래도 그 짧은 동안 기분 좋은 건 확실해.\n#대구인테리어필름"
       },
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "17939804571403632",
+          "permalink": "https://www.threads.com/@stickto_film/post/DfV8KMhkUK0",
+          "at": "2026-11-05T02:17:50.837Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-05T02:17:51.067Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-05-2100-daily",
@@ -1237,7 +1247,17 @@
         "time": "11:54"
       },
       "note": "2026-11-02 오늘확인 스레드에서 추가",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18117424583591886",
+          "permalink": "https://www.threads.com/@stickto_film/post/DfWAX0ekWD6",
+          "at": "2026-11-05T02:54:41.629Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-05T02:54:41.992Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-07-H146",
