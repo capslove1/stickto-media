@@ -1321,7 +1321,7 @@
       "id": "2026-11-07-H146",
       "date": "2026-11-07",
       "site": "H146",
-      "status": "approved",
+      "status": "posted",
       "type": "photo",
       "instagram": {
         "date": "2026-11-07",
@@ -1351,6 +1351,24 @@
           "verify": {
             "ok": true,
             "at": "2026-11-07T03:06:40.210Z"
+          }
+        },
+        "instagram": {
+          "id": "17909951271571604",
+          "permalink": "https://www.instagram.com/p/DfcA_qzloIf/",
+          "at": "2026-11-07T10:55:33.061Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-07T10:55:33.142Z"
+          }
+        },
+        "facebook": {
+          "id": "1290805454119001_122123462607462740",
+          "permalink": "https://www.facebook.com/122118972933462740/posts/122123462607462740",
+          "at": "2026-11-07T10:55:43.908Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-07T10:55:44.136Z"
           }
         }
       }
