@@ -1343,7 +1343,17 @@
         "time": "12:06"
       },
       "note": "2026-11-02 오늘확인 스레드에서 추가",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "17894360280615910",
+          "permalink": "https://www.threads.com/@stickto_film/post/DfbLVfTkZQN",
+          "at": "2026-11-07T03:06:39.673Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-07T03:06:40.210Z"
+          }
+        }
+      }
     }
   ]
 }
