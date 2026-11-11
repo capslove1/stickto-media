@@ -129,8 +129,16 @@
         "대구인테리어필름",
         "싱크대필름"
       ],
-      "status": "approved",
-      "result": {},
+      "status": "posted",
+      "result": {
+        "postId": "7700355633985407546",
+        "url": "https://stickto-film.blogspot.com/2026/11/blog-post_10.html",
+        "at": "2026-11-11T02:30:02.285Z",
+        "verify": {
+          "ok": true,
+          "at": "2026-11-11T02:30:02.705Z"
+        }
+      },
       "site": "H097"
     },
     {
