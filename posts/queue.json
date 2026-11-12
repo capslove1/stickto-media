@@ -1263,13 +1263,23 @@
       "id": "2026-11-12-0830-daily",
       "type": "text",
       "date": "2026-11-12",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "08:25",
         "text": "이사 온 집에서 한동안 헷갈리는 게 스위치 위치야.\n깜깜한 데서 벽을 더듬으면 손이 자꾸 전에 살던 집 자리로 가.\n겨우 찾아서 눌렀는데 엉뚱한 방 불이 켜지고.\n그러다 어느 날 눈 감고도 탁 켜는 순간이 와.\n머리보다 손이 먼저 집을 외우는 거지.\n너네도 이사 와서 스위치 헤맨 적 있어?\n#대구인테리어필름"
       },
       "note": "2026-11-02 오늘확인 스레드에서 추가",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "17921050698526706",
+          "permalink": "https://www.threads.com/@stickto_film/post/Dfn-CM0IPyf",
+          "at": "2026-11-12T02:20:33.890Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-12T02:20:34.111Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-12-2100-daily",
@@ -1553,7 +1563,17 @@
         "time": "12:15"
       },
       "note": "2026-11-02 자동 업로드 일정 스레드에서 추가",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18644470594029532",
+          "permalink": "https://www.threads.com/@stickto_film/post/DfoEWf-IDC0",
+          "at": "2026-11-12T03:15:46.085Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-12T03:15:46.204Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-14-H210",
