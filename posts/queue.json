@@ -1477,7 +1477,7 @@
       "id": "2026-11-12-H225",
       "date": "2026-11-13",
       "site": "H225",
-      "status": "approved",
+      "status": "partial",
       "type": "photo",
       "instagram": {
         "date": "2026-11-13",
@@ -1503,8 +1503,27 @@
         "threads": {
           "error": "알 수 없는 에러예요. 아래 상세 메시지를 확인해 주세요. An unknown error occurred (code 1, subcode 2207032)",
           "at": "2026-11-13T03:07:37.454Z"
+        },
+        "instagram": {
+          "id": "18349241794254112",
+          "permalink": "https://www.instagram.com/p/DfrdxpyoHMK/",
+          "at": "2026-11-13T10:55:37.656Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-13T10:55:37.704Z"
+          }
+        },
+        "facebook": {
+          "id": "1290805454119001_122124722673462740",
+          "permalink": "https://www.facebook.com/122118972933462740/posts/122124722673462740",
+          "at": "2026-11-13T10:55:45.316Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-13T10:55:45.490Z"
+          }
         }
-      }
+      },
+      "notified": true
     },
     {
       "id": "2026-11-10-H036",
