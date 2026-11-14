@@ -1351,13 +1351,23 @@
       "id": "2026-11-14-0830-daily",
       "type": "text",
       "date": "2026-11-14",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "08:43",
         "text": "집집마다 문 닫는 소리가 다 달라.\n'딸깍' 얌전히 닫히는 문, 바람 불면 '쾅' 하는 문, 끝까지 밀어야 겨우 닫히는 문.\n몇 년 살면 소리만 듣고도 누가 어느 방 들어갔는지 알 정도야.\n문은 색으로도 보지만 매일 소리로도 같이 사는 거지.\n너네 집에서 제일 시끄러운 문은 어디야?\n#대구인테리어필름"
       },
       "note": "2026-11-02 오늘확인 스레드에서 추가",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18138428629655853",
+          "permalink": "https://www.threads.com/@stickto_film/post/DftHL6zFtvU",
+          "at": "2026-11-14T02:16:42.928Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-14T02:16:43.054Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-14-2100-daily",
@@ -1673,7 +1683,17 @@
         "time": "12:03"
       },
       "note": "2026-11-02 자동 업로드 일정 스레드에서 추가",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "17989856810883280",
+          "permalink": "https://www.threads.com/@stickto_film/post/DftMjUaFnGD",
+          "at": "2026-11-14T03:03:36.563Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-14T03:03:36.730Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-17-H209",
@@ -1734,5 +1754,5 @@
       "result": {}
     }
   ],
-  "threadsLowNotified": "2026-11-13"
+  "threadsLowNotified": "2026-11-14"
 }
