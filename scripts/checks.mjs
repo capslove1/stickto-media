@@ -19,6 +19,11 @@ export function validate(item, ch) {
     if (tags.length !== 1 || tags[0] !== THREADS_TAG) problems.push(`스레드 해시태그는 ${THREADS_TAG} 1개만 써야 해요(지금: ${tags.join(" ") || "없음"}).`);
     if (PHONE.test(c.text)) problems.push("스레드 글에 전화번호가 있어요.");
     if (threadsLength(c.text) > 500) problems.push("스레드 글이 500자를 넘어요.");
+    if (c.poll !== undefined) {
+      if (!Array.isArray(c.poll) || c.poll.length < 2 || c.poll.length > 4) problems.push("스레드 투표 선택지는 2~4개여야 해요.");
+      else if (c.poll.some((o) => typeof o !== "string" || !o.trim() || [...o].length > 25)) problems.push("스레드 투표 선택지는 1~25자여야 해요.");
+      if ((c.images ?? []).length) problems.push("스레드 투표는 사진 없는 글에만 붙일 수 있어요.");
+    }
   } else if (ch === "instagram") {
     const tags = tagsOf(c.caption);
     if (tags.length > IG_TAG_LIMIT) problems.push(`인스타 해시태그가 ${tags.length}개예요(${IG_TAG_LIMIT}개까지).`);

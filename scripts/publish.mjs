@@ -132,10 +132,13 @@ async function retryNotFound(fn, label) {
   }
 }
 
-async function postThreads(images, text) {
+// poll: 투표 선택지 2~4개(글만 있는 스레드 글에서만). 메타 공식 API poll_attachment(option_a~d), 투표는 24시간 열림.
+async function postThreads(images, text, poll) {
   let creationId;
   if (images.length === 0) {
-    ({ id: creationId } = await th("POST", "me/threads", { media_type: "TEXT", text }));
+    const params = { media_type: "TEXT", text };
+    if (poll?.length) params.poll_attachment = JSON.stringify(Object.fromEntries(poll.map((o, i) => [`option_${"abcd"[i]}`, o])));
+    ({ id: creationId } = await th("POST", "me/threads", params));
   } else if (images.length === 1) {
     ({ id: creationId } = await th("POST", "me/threads", { media_type: "IMAGE", image_url: images[0], text }));
   } else {
@@ -369,6 +372,7 @@ async function run(mode) {
     console.log(`\n${label} · ${item.type ?? "photo"}${item.site ? " · " + item.site : ""}`);
     imgs.forEach((u, i) => console.log(`  사진 ${i + 1}: ${u}`));
     if (!imgs.length) console.log(`  글: ${text.split("\n")[0]} …`);
+    if (ch === "threads" && item.threads.poll?.length) console.log(`  투표: ${item.threads.poll.join(" / ")}`);
     if (mode !== "post") {
       if (at > now) console.log(`  예약 시각까지 ${Math.ceil((at - now) / 60_000)}분 기다렸다가 올릴 예정`);
       if (imgs.length) {
@@ -395,7 +399,7 @@ async function run(mode) {
     } else {
       try {
         if (imgs.length) await checkImages(imgs);
-        const r = await ({ instagram: postInstagram, facebook: postFacebook, threads: postThreads })[ch](imgs, text);
+        const r = await ({ instagram: postInstagram, facebook: postFacebook, threads: postThreads })[ch](imgs, text, ch === "threads" ? item.threads.poll : undefined);
         item.result[ch] = { ...r, at: new Date().toISOString() };
         console.log(`  게시 완료: ${r.permalink ?? r.id}`);
         addEvent({ kind: "ok", ch, date: chDate(item, ch), site: item.site ?? item.id, permalink: r.permalink });
