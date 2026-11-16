@@ -2389,7 +2389,7 @@
       "id": "2026-11-16-poll-film-amount",
       "type": "text",
       "date": "2026-11-16",
-      "status": "approved",
+      "status": "posted",
       "fixedTime": true,
       "threads": {
         "time": "12:20",
@@ -2402,7 +2402,17 @@
         ]
       },
       "note": "시공업자 질문 글(사업주 확정 문구, 수정 X). 투표 24시간. 2026-11-14 사용자 요청으로 자동 게시",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18033543845911195",
+          "permalink": "https://www.threads.com/@stickto_film/post/DfyYCsQkWia",
+          "at": "2026-11-16T03:20:08.908Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-16T03:20:09.074Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-18-poll-photo-quote",
