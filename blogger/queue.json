@@ -157,8 +157,16 @@
         "대구인테리어필름",
         "월성동"
       ],
-      "status": "approved",
-      "result": {},
+      "status": "posted",
+      "result": {
+        "postId": "5410358304182524469",
+        "url": "https://stickto-film.blogspot.com/2026/11/blog-post_17.html",
+        "at": "2026-11-18T02:30:01.033Z",
+        "verify": {
+          "ok": true,
+          "at": "2026-11-18T02:30:01.227Z"
+        }
+      },
       "site": "H019"
     },
     {

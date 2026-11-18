@@ -1901,13 +1901,23 @@
       "id": "2026-11-18-0830-daily",
       "type": "text",
       "date": "2026-11-18",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "08:16",
         "text": "수건 개는 법은 집마다 법이 있어.\n세 번 접어서 돌돌 마는 집, 반 접고 또 반 접는 집, 호텔처럼 세워 두는 집.\n같이 살기 시작하면 이걸로 처음 의견이 갈리기도 하고.\n결국 먼저 개는 사람 방식으로 정해지더라.\n너희 집은 어떻게 개? 접는 법 한 줄로 남겨 줘.\n#대구인테리어필름"
       },
       "note": "2026-11-13 스레드 예약글 채워 넣기 스레드에서 추가",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18116309930167835",
+          "permalink": "https://www.threads.com/@stickto_film/post/Df3b6V5FEjV",
+          "at": "2026-11-18T02:30:14.703Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-18T02:30:14.829Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-18-2100-daily",
@@ -2476,7 +2486,7 @@
       "id": "2026-11-18-poll-photo-quote",
       "type": "text",
       "date": "2026-11-18",
-      "status": "approved",
+      "status": "posted",
       "fixedTime": true,
       "threads": {
         "time": "12:20",
@@ -2489,7 +2499,17 @@
         ]
       },
       "note": "시공업자 질문 글(사업주 확정 문구, 수정 X). 투표 24시간. 2026-11-14 사용자 요청으로 자동 게시",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18119510674953477",
+          "permalink": "https://www.threads.com/@stickto_film/post/Df3hoaPlOky",
+          "at": "2026-11-18T03:20:12.751Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-18T03:20:12.879Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-21-poll-site-profit",
