@@ -1781,7 +1781,7 @@
       "id": "2026-11-19-H244",
       "date": "2026-11-19",
       "site": "H244",
-      "status": "approved",
+      "status": "posted",
       "type": "photo",
       "instagram": {
         "date": "2026-11-19",
@@ -1815,6 +1815,24 @@
           "verify": {
             "ok": true,
             "at": "2026-11-19T03:05:46.737Z"
+          }
+        },
+        "instagram": {
+          "id": "18220219057360021",
+          "permalink": "https://www.instagram.com/p/Df66kBWkWH-/",
+          "at": "2026-11-19T10:55:43.362Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-19T10:55:43.477Z"
+          }
+        },
+        "facebook": {
+          "id": "1290805454119001_122125908813462740",
+          "permalink": "https://www.facebook.com/122118972933462740/posts/122125908813462740",
+          "at": "2026-11-19T10:55:54.592Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-19T10:55:54.762Z"
           }
         }
       }
