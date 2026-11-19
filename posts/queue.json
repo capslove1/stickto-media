@@ -1807,7 +1807,17 @@
         "time": "12:05"
       },
       "note": "2026-11-08 이번 주 게시물 점검 스레드에서 추가 (새 자료 정리 스레드 H244 초안)",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18019652915975318",
+          "permalink": "https://www.threads.com/@stickto_film/post/Df6ExadFXbM",
+          "at": "2026-11-19T03:05:46.352Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-19T03:05:46.737Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-16-0830-daily",
@@ -1945,13 +1955,23 @@
       "id": "2026-11-19-0830-daily",
       "type": "text",
       "date": "2026-11-19",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "08:26",
         "text": "이사하면 끝까지 안 뜯는 상자가 꼭 하나 있어.\n처음엔 \"이건 주말에 정리해야지\" 하고 구석에 둬.\n몇 달 지나면 그 위에 다른 짐이 올라가 있고.\n다음 이사 때 그대로 들고 가서 열어 보면\n뭐가 들었는지 기억도 안 나.\n그런데 이상하게 그 상자는 또 못 버려.\n#대구인테리어필름"
       },
       "note": "2026-11-13 스레드 예약글 채워 넣기 스레드에서 추가",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18001447917045228",
+          "permalink": "https://www.threads.com/@stickto_film/post/Df5_mbiFTEd",
+          "at": "2026-11-19T02:20:28.962Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-19T02:20:29.130Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-19-2100-daily",
