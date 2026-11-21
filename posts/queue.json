@@ -2061,13 +2061,23 @@
       "id": "2026-11-21-0830-daily",
       "type": "text",
       "date": "2026-11-21",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "08:32",
         "text": "집 정리 한다고 가구 위치 바꾸는 날 있잖아.\n소파를 저쪽으로 옮겨 보고, 침대 방향도 돌려 보고.\n땀 흘리면서 다 옮기고 나서 한참 앉아 있다가\n결국 원래 자리가 제일 낫다는 걸 알게 돼.\n그래도 그 사이에 소파 밑 먼지는 다 치웠으니까 남는 건 있어.\n#대구인테리어필름"
       },
       "note": "2026-11-13 스레드 예약글 채워 넣기 스레드에서 추가",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "17944554339389083",
+          "permalink": "https://www.threads.com/@stickto_film/post/Df_JMY0jrPf",
+          "at": "2026-11-21T02:20:36.879Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-21T02:20:37.247Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-21-2100-daily",
@@ -2599,7 +2609,7 @@
       "id": "2026-11-21-poll-site-profit",
       "type": "text",
       "date": "2026-11-21",
-      "status": "approved",
+      "status": "failed",
       "fixedTime": true,
       "threads": {
         "time": "12:20",
@@ -2612,7 +2622,13 @@
         ]
       },
       "note": "시공업자 질문 글(사업주 확정 문구, 수정 X). 투표 24시간. 2026-11-14 사용자 요청으로 자동 게시",
-      "result": {}
+      "result": {
+        "threads": {
+          "error": "요청 값이 잘못되었어요. 아래 상세 메시지를 확인해 주세요. Invalid parameter (code 100, subcode 4279063)",
+          "at": "2026-11-21T03:20:01.216Z"
+        }
+      },
+      "notified": true
     },
     {
       "id": "2026-11-23-1220-ask-self-diy",
