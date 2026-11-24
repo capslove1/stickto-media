@@ -2149,13 +2149,23 @@
       "id": "2026-11-24-0830-daily",
       "type": "text",
       "date": "2026-11-24",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "08:24",
         "text": "도어락 비밀번호 누를 때 뒤에 누가 있으면 괜히 긴장돼.\n손바닥으로 가리고 누르다가 꼭 하나 틀려.\n'삐리릭' 실패 소리가 나면 괜히 더 수상한 사람 된 기분이고.\n두 번째엔 천천히 눌러서 겨우 열고 들어가.\n내 집인데 왜 내가 떨리는 건지 모르겠어.\n#대구인테리어필름"
       },
       "note": "2026-11-13 스레드 예약글 채워 넣기 스레드에서 추가",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18291691666289160",
+          "permalink": "https://www.threads.com/@stickto_film/post/DgG3lWbkcrM",
+          "at": "2026-11-24T02:20:41.532Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-24T02:20:42.345Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-24-2100-daily",
@@ -2687,14 +2697,24 @@
       "id": "2026-11-24-1220-ask-before-after-move",
       "type": "text",
       "date": "2026-11-24",
-      "status": "approved",
+      "status": "posted",
       "fixedTime": true,
       "threads": {
         "time": "12:20",
         "text": "집 고칠 거면 이사 들어가기 전에 싹 한다 vs 살면서 하나씩 한다.\n들어가기 전에 하면 짐이 없어서 편하고 한 번에 끝나.\n대신 돈이 한꺼번에 들고, 살아 보기 전이라 뭐가 불편할지 아직 몰라.\n살면서 하면 진짜 거슬리는 곳부터 고칠 수 있는데, 짐 옮기고 치우는 게 일이야.\n너라면 어느 쪽이야? 이유도 같이 남겨 줘.\n#대구인테리어필름"
       },
       "note": "의견 묻는 글(스레드 '의견 묻는 글 쓰기' 초안). 2026-11-14 사용자 요청으로 예약",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "17942950173392286",
+          "permalink": "https://www.threads.com/@stickto_film/post/DgG-ZuGEZzb",
+          "at": "2026-11-24T03:20:13.503Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-24T03:20:14.578Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-25-1220-ask-gloss-matte",
