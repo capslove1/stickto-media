@@ -2193,13 +2193,23 @@
       "id": "2026-11-25-0830-daily",
       "type": "text",
       "date": "2026-11-25",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "08:36",
         "text": "옷장 철 바꾸는 날은 꼭 날 잡고 해야 돼.\n겨울옷 꺼내다 보면 작년에 산 줄도 몰랐던 옷이 나오고.\n반대로 분명 있었던 니트는 아무리 찾아도 안 보여.\n여름옷 넣으면서 \"내년엔 정리 좀 잘해 둬야지\" 하는데\n그 다짐도 여름옷이랑 같이 옷장 깊숙이 들어가.\n#대구인테리어필름"
       },
       "note": "2026-11-13 스레드 예약글 채워 넣기 스레드에서 추가",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18118715510163990",
+          "permalink": "https://www.threads.com/@stickto_film/post/DgJdeczFsWq",
+          "at": "2026-11-25T02:30:15.885Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-25T02:30:16.224Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-25-2100-daily",
@@ -2730,14 +2740,24 @@
       "id": "2026-11-25-1220-ask-gloss-matte",
       "type": "text",
       "date": "2026-11-25",
-      "status": "approved",
+      "status": "posted",
       "fixedTime": true,
       "threads": {
         "time": "12:20",
         "text": "문이나 싱크대 색 고를 때 유광이 좋아, 무광이 좋아?\n유광은 반짝여서 화사하고 집이 밝아 보여.\n대신 손자국이나 조명 반사가 눈에 잘 띄고.\n무광은 차분하고 은은한데, 화사한 맛은 좀 덜하지.\n사진으로 볼 때랑 매일 집에서 볼 때 느낌이 또 다르더라.\n너는 어느 쪽이 더 끌려? 이유 한 줄 남겨 줘.\n#대구인테리어필름"
       },
       "note": "의견 묻는 글(스레드 '의견 묻는 글 쓰기' 초안). 2026-11-14 사용자 요청으로 예약",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "17892830064468829",
+          "permalink": "https://www.threads.com/@stickto_film/post/DgJjMeeFrW6",
+          "at": "2026-11-25T03:20:11.750Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-25T03:20:11.859Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-26-1220-ask-who-picks-color",

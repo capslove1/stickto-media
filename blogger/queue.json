@@ -185,8 +185,16 @@
         "대구인테리어필름",
         "율하"
       ],
-      "status": "approved",
-      "result": {},
+      "status": "posted",
+      "result": {
+        "postId": "1785477341186194742",
+        "url": "https://stickto-film.blogspot.com/2026/11/blog-post_24.html",
+        "at": "2026-11-25T02:30:01.012Z",
+        "verify": {
+          "ok": true,
+          "at": "2026-11-25T02:30:01.145Z"
+        }
+      },
       "site": "H063"
     },
     {
