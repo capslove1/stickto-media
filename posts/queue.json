@@ -2237,13 +2237,23 @@
       "id": "2026-11-26-0830-daily",
       "type": "text",
       "date": "2026-11-26",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "08:41",
         "text": "집에서 슬리퍼 신는 사람이랑 맨발인 사람은 꼭 한 집에 같이 살아.\n한 명은 바닥 차갑다고 꼭 신으라 하고,\n한 명은 답답하다고 벗어서 아무 데나 두고.\n그러다 밤에 그 슬리퍼 밟고 놀라는 건 또 신으라던 사람이야.\n너희 집은 누가 슬리퍼파고 누가 맨발파야?\n#대구인테리어필름"
       },
       "note": "2026-11-13 스레드 예약글 채워 넣기 스레드에서 추가",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18091178654320272",
+          "permalink": "https://www.threads.com/@stickto_film/post/DgMBLgNlUOW",
+          "at": "2026-11-26T02:20:41.848Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-26T02:20:42.043Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-26-2100-daily",
@@ -2773,14 +2783,24 @@
       "id": "2026-11-26-1220-ask-who-picks-color",
       "type": "text",
       "date": "2026-11-26",
-      "status": "approved",
+      "status": "posted",
       "fixedTime": true,
       "threads": {
         "time": "12:20",
         "text": "같이 사는 집에서 색은 누가 정해?\n벽지 색, 문 색, 소파 색, 커튼 색까지 하나하나 다.\n한 명이 다 고르고 한 명은 \"응 좋아\"만 하는 집,\n둘이 끝까지 안 맞아서 결국 흰색으로 가는 집.\n집마다 정하는 방식이 다 다르잖아.\n너희 집은 어떻게 정해졌어? 정한 과정 한 줄 남겨 줘.\n#대구인테리어필름"
       },
       "note": "의견 묻는 글(스레드 '의견 묻는 글 쓰기' 초안). 2026-11-14 사용자 요청으로 예약",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "17986785774121200",
+          "permalink": "https://www.threads.com/@stickto_film/post/DgMH_a8lfeR",
+          "at": "2026-11-26T03:20:07.304Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-26T03:20:07.602Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-27-1220-ask-pick-company",
