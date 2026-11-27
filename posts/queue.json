@@ -2281,13 +2281,23 @@
       "id": "2026-11-27-0830-daily",
       "type": "text",
       "date": "2026-11-27",
-      "status": "approved",
+      "status": "posted",
       "threads": {
         "time": "08:28",
         "text": "화장실 휴지 마지막 한 칸 쓴 사람은 꼭 새 걸 안 걸어 둬.\n심이 그대로 걸려 있는 거 보면 누군지 다 알아.\n본인은 \"나 아니야\"라고 하는데 집에 사람이 몇 명 없잖아.\n결국 급한 사람이 새 휴지 꺼내러 다녀오게 되고.\n이거 집집마다 다 있는 일 맞지?\n#대구인테리어필름"
       },
       "note": "2026-11-13 스레드 예약글 채워 넣기 스레드에서 추가",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18134858977686162",
+          "permalink": "https://www.threads.com/@stickto_film/post/DgOl9hyDKYd",
+          "at": "2026-11-27T02:20:34.882Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-27T02:20:35.100Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-27-2100-daily",
@@ -2816,14 +2826,24 @@
       "id": "2026-11-27-1220-ask-pick-company",
       "type": "text",
       "date": "2026-11-27",
-      "status": "approved",
+      "status": "posted",
       "fixedTime": true,
       "threads": {
         "time": "12:20",
         "text": "집 손볼 때 업체는 뭘 보고 골라?\n1. 시공 사진. 해 놓은 걸 직접 봐야 믿음이 가.\n2. 후기. 다른 사람 말이 제일 정확하다 싶어서.\n3. 가격. 비슷해 보이면 결국 가격 보게 돼.\n4. 상담할 때 느낌. 말이 잘 통하는지.\n하나만 고르기 어려우면 순서대로 적어 줘도 돼. 이유도 한 줄 남겨 줘.\n#대구인테리어필름"
       },
       "note": "의견 묻는 글(스레드 '의견 묻는 글 쓰기' 초안). 2026-11-14 사용자 요청으로 예약",
-      "result": {}
+      "result": {
+        "threads": {
+          "id": "18112854974349711",
+          "permalink": "https://www.threads.com/@stickto_film/post/DgOsyOtjMtU",
+          "at": "2026-11-27T03:20:10.502Z",
+          "verify": {
+            "ok": true,
+            "at": "2026-11-27T03:20:10.698Z"
+          }
+        }
+      }
     },
     {
       "id": "2026-11-28-1220-ask-delay-quote",
